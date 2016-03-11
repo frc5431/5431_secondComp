@@ -1,4 +1,7 @@
 package org.usfirst.frc.team5431.robot;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Class for Teleop commands.
  * 
@@ -11,7 +14,8 @@ public class Teleop {
 	private int prevFlywheel = 0;
 	private int prevIntakeIn = 0;
 	private int prevIntakeOut = 0;
-	
+	private boolean ballIn = false;
+	private boolean overrideLimit = false;
 	/**
 	 * Teleop constructor for the Teleop class. Other than being a constructor, 
 	 * this does nothing special.
@@ -26,30 +30,72 @@ public class Teleop {
 	 */
 	public void Update(OI input){
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
-		if((input.xboxAVal ? 1:0) > prevFlywheel){
-			if(Robot.flywheels.getFlywheelSpeed() > 0)
+		if((input.joystickButton2 ? 1:0) > prevFlywheel){
+			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
+			if(Robot.flywheels.getFlywheelSpeed() > 0.0)
 				Robot.flywheels.setFlywheelSpeed(0.0);
 			else
-				Robot.flywheels.setFlywheelSpeed(constFlyWheelSpeed);				
+				Robot.flywheels.setFlywheelSpeed((input.joystickPotentiometerVal + 1) / 2);				
 		}
-		if((input.xboxBVal ? 1:0) > prevIntakeOut){
-			if(Robot.flywheels.getIntakeSpeed() > 0)
-				Robot.flywheels.setFlywheelSpeed(0);
+		prevFlywheel = (input.joystickButton2 ? 1:0);
+		/*
+		if(input.xboxXVal){
+			Robot.flywheels.setIntakeSpeed(-1.0);
+		}
+		/*
+		else
+			Robot.flywheels.setIntakeSpeed(0.0);
+			*/
+		
+		if((input.xboxXVal ? 1:0) > prevIntakeOut){
+			if(Robot.flywheels.getIntakeSpeed() < 0.0)
+				Robot.flywheels.setIntakeSpeed(0);
 			else
-				Robot.flywheels.setFlywheelSpeed(-1.0);
+				Robot.flywheels.setIntakeSpeed(-1.0);
 			//Intake in
 		}
-		if((input.xboxXVal ? 1:0) > prevIntakeIn){
-			if(Robot.flywheels.getIntakeSpeed() > 0)
-				Robot.flywheels.setFlywheelSpeed(0);
+		prevIntakeOut = (input.xboxXVal ? 1:0);
+		if(Robot.flywheels.getIntakeSpeed() > 0.0){
+			SmartDashboard.putNumber("Bug", -1.54);
+			if(!Robot.flywheels.intakeLimit.get()){
+				SmartDashboard.putNumber("Bug", 1.345);
+				Robot.flywheels.setIntakeSpeed(0);
+				ballIn = true;
+			}
+			else{
+				SmartDashboard.putNumber("Bug", 5.431);
+				ballIn = false;
+			}
+		}
+		
+		if(ballIn){
+			SmartDashboard.putNumber("Bug", -1);
+			if(input.joystickTriggerVal)
+				Robot.flywheels.setIntakeSpeed(1.0);
 			else
-				Robot.flywheels.setFlywheelSpeed(1.0);
+				Robot.flywheels.setIntakeSpeed(0);
+		}
+		
+		SmartDashboard.putNumber("Bug", 1.280000000006);
+		if((input.xboxBVal ? 1:0) > prevIntakeIn){
+			/*
+			if(Robot.flywheels.intakeLimit.get()){
+				overrideLimit = true;
+			}
+			else
+				overrideLimit = false;
+				*/
+			SmartDashboard.putNumber("Bug", 3.14);
+			SmartDashboard.putNumber("Intake speed", Robot.flywheels.getIntakeSpeed());
+			if(Robot.flywheels.getIntakeSpeed() != 0.0)
+				Robot.flywheels.setIntakeSpeed(0);
+			else
+				Robot.flywheels.setIntakeSpeed(1.0);
 			//Intake out
 		}
+		prevIntakeIn = (input.xboxBVal ? 1:0);
 		if(input.xboxYVal)
 			Robot.flywheels.climb();
-		prevFlywheel = (input.xboxAVal ? 1:0);
-		prevIntakeIn = (input.xboxBVal ? 1:0);
-		prevIntakeOut = (input.xboxXVal ? 1:0);
+		
 	}
 }

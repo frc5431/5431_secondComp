@@ -12,17 +12,23 @@ public class OI {
 	Joystick xbox, joystick;
 	public double xboxRightJoystickVal = 0;
 	public double xboxLeftJoystickVal = 0;
+	public double joystickPotentiometerVal = 0.0;
 	public boolean xboxAVal = false;
 	public boolean xboxBVal = false;
 	public boolean xboxXVal = false;
 	public boolean xboxYVal = false;
+	public boolean joystickTriggerVal = false;
+	public boolean joystickButton2 = false;
 	
 	private int xboxRightJoy = 1;
 	private int xboxLeftJoy = 5;
+	private int joystickPotentiometer = 2;
 	private int xboxButtonA = 1;
-	private int xboxButtonB = 3;
-	private int xboxButtonX = 2;
+	private int xboxButtonB = 2;
+	private int xboxButtonX = 3;
 	private int xboxButtonY = 4;
+	private int joystickTrigger = 1;
+	private int joystickButtonLabeled2 = 2;
 	
 	public OI(int xboxPort, int joystickPort){
 		xbox = new Joystick(xboxPort);
@@ -32,11 +38,13 @@ public class OI {
 	public void updateVals(){
 		xboxRightJoystickVal = xbox.getRawAxis(xboxRightJoy);
 		xboxLeftJoystickVal = xbox.getRawAxis(xboxLeftJoy);
+		joystickPotentiometerVal = joystick.getRawAxis(joystickPotentiometer);
 		xboxAVal = xbox.getRawButton(xboxButtonA);
 		xboxBVal = xbox.getRawButton(xboxButtonB);
 		xboxXVal = xbox.getRawButton(xboxButtonX);
 		xboxYVal = xbox.getRawButton(xboxButtonY);
-		
+		joystickTriggerVal = joystick.getRawButton(joystickTrigger);
+		joystickButton2 = joystick.getRawButton(joystickButtonLabeled2);
 		//Add joystick stuff if we ever need a joystick
 	}
 }

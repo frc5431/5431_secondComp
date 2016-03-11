@@ -2,6 +2,7 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Shooter {
 	Solenoid initialClimbSolenoid;
 	Solenoid secondClimbSolenoid;
+	DigitalInput intakeLimit;
 	CANTalon rightFW, leftFW, intakeMotor, winchMotor;
 	Encoder rightRpmEnc, leftRpmEnc;
 	
@@ -22,6 +24,7 @@ public class Shooter {
 	 * Do not reset encoders by calling this multiple times. If you do so, you are an idiot. Period.
 	 */
 	public Shooter(){
+		intakeLimit = new DigitalInput(RobotMap.intakeLim);
 		initialClimbSolenoid = new Solenoid(RobotMap.firstSolenoid);
 		secondClimbSolenoid = new Solenoid(RobotMap.secondSolenoid);
 		initialClimbSolenoid.set(false);
@@ -32,7 +35,7 @@ public class Shooter {
 		winchMotor = new CANTalon(RobotMap.winch);
 		winchMotor.reverseOutput(false);
 		intakeMotor.reverseOutput(false);
-		rightFW.reverseOutput(false);
+		rightFW.setInverted(true);
 		leftFW.reverseOutput(false);
 		rightRpmEnc = new Encoder(RobotMap.rightFWEnc1, RobotMap.rightFWEnc2, false, EncodingType.k1X);
 		leftRpmEnc = new Encoder(RobotMap.leftFWEnc1, RobotMap.leftFWEnc2, false, EncodingType.k1X);
@@ -70,7 +73,7 @@ public class Shooter {
 	}
 	
 	public double getFlywheelSpeed(){
-		return rightFW.get();
+		return leftFW.get();
 	}
 	public void setIntakeSpeed(double speed){
 		intakeMotor.set(speed);
