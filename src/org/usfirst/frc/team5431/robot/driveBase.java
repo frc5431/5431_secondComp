@@ -33,10 +33,10 @@ public class driveBase {
 		frontleft.setInverted(false);
 		rearright.setInverted(false);
 		rearleft.setInverted(false);
-		frontright.enableBrakeMode(false);									//Default brake mode will be coast
-		frontleft.enableBrakeMode(false);
-		rearright.enableBrakeMode(false);
-		rearleft.enableBrakeMode(false);
+		frontright.enableBrakeMode(true);									//Default brake mode will be coast
+		frontleft.enableBrakeMode(true);
+		rearright.enableBrakeMode(true);
+		rearleft.enableBrakeMode(true);
 		tankDriveBase = new RobotDrive(frontleft, rearleft, frontright, rearright);//Initializes RobotDrive to use tankDrive()
 		rightBaseEncoder = new Encoder(RobotMap.rightBaseEnc1, RobotMap.rightBaseEnc2, false, EncodingType.k4X);//Using 4X encoding for encoders
 		leftBaseEncoder = new Encoder(RobotMap.leftBaseEnc1, RobotMap.leftBaseEnc2, false, EncodingType.k4X);

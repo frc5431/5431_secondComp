@@ -3,6 +3,7 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5431.robot.driveBase;
@@ -12,6 +13,7 @@ import org.usfirst.frc.team5431.robot.Flywheels;
  * version without the bells and whistles that are added to the first version of the competition code. 
  */
 public class Robot extends IterativeRobot {
+	public static NetworkTable table;
     final String defaultAuto = "Default";
     final String customAuto = "My Auto";
     String autoSelected;
@@ -26,6 +28,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	table = NetworkTable.getTable("5431");
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
@@ -51,6 +54,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	/*
     	switch(autoSelected) {
     	case customAuto:
         //Put custom auto code here   
@@ -60,6 +64,8 @@ public class Robot extends IterativeRobot {
     	//Put default auto code here
             break;
     	}
+    	*/
+    	auton.updateStates();
     }
 
     /**

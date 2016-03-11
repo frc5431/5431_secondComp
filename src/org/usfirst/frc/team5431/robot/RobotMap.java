@@ -5,10 +5,10 @@ package org.usfirst.frc.team5431.robot;
  *
  */
 public class RobotMap {
-	public static int frontright = 0;		//Mapping for driveBase motors
-	public static int frontleft = 1;
-	public static int rearright = 2;
-	public static int rearleft = 3;
+	public static int frontright = 4;		//Mapping for driveBase motors
+	public static int frontleft = 6;
+	public static int rearright = 3;
+	public static int rearleft = 7;
 	
 	public static int rightFlyWheel = 4;	//Mapping for Flywheel motors
 	public static int leftFlyWheel = 5;

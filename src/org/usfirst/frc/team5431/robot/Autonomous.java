@@ -14,17 +14,31 @@ public class Autonomous {
 	private double[] encodersDistance = {0};
 	private double[] encodersRPM = {0};
 	
+	/**
+	 * Initializes the Autonomous class.
+	 */
 	public Autonomous(){
 		driveForwardDistance = driveBase.wheelDiameter * Math.PI * 10;//10 is distance in inches - must change
 	}
 	/**
-	 * Updates the state of various autonomous functions. This must be called in <b>teleopPeriodic</b>.
+	 * Updates the state of various autonomous functions. This must be called in <b>autonomousPeriodic()</b>.
+	 * <ul>Currently updates</ul>:
+	 * <li>driveForward()</li>
+	 * <li>autoAim()</li>
 	 */
 	public void updateStates(){
 		driveForwardState = driveForward(driveForwardState);
 		autoAIMState = autoAim(autoAIMState);
 	}
 	
+	/**
+	 * Function that uses switch-case autonomous to
+	 * allow the robot to drive forward at full speed
+	 * until the driveForwardDistance specified in Autonomous.java.
+	 * <b>Should only be called within updateStates()</b> Won't work otherwise.
+	 * @param state
+	 * @return state
+	 */
 	public int driveForward(int state){
 		switch(state){
 			default:
@@ -47,7 +61,13 @@ public class Autonomous {
 		}
 		return state;
 	}
-	
+	/**
+	 * Function that uses switch-case autonomous to
+	 * allow the robot to constantly look for a target to do auto-aim then fires..
+	 * <b>Should only be called within updateStates().</b> Won't work otherwise.
+	 * @param state
+	 * @return state
+	 */
 	public int autoAim(int state){
 		switch(state){
 			default:
