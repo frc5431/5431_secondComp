@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import org.usfirst.frc.team5431.robot.driveBase;
+import org.usfirst.frc.team5431.robot.Flywheels;
 /**
  * This is the second version of competition code (sans David as per request). This competition code is intended to be a functional
  * version without the bells and whistles that are added to the first version of the competition code. 
@@ -15,7 +16,11 @@ public class Robot extends IterativeRobot {
     final String customAuto = "My Auto";
     String autoSelected;
     SendableChooser chooser;
-    
+    static driveBase drivebase = new driveBase();
+    static Flywheels flywheels = new Flywheels();
+    static Teleop teleop = new Teleop();
+    static Autonomous auton = new Autonomous();
+    static OI oiInput = new OI(0, 1);
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -58,10 +63,12 @@ public class Robot extends IterativeRobot {
     }
 
     /**
-     * This function is called periodically during operator control
+     * This function is called periodically during operator control.
+     * Calls the update functions for the OI and the Teleop classes.
      */
     public void teleopPeriodic() {
-        
+        oiInput.updateVals();
+        teleop.Update(oiInput);
     }
     
     /**
