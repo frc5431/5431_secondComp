@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5431.robot.driveBase;
-import org.usfirst.frc.team5431.robot.Flywheels;
+import org.usfirst.frc.team5431.robot.Shooter;
 /**
  * This is the second version of competition code (sans David as per request). This competition code is intended to be a functional
  * version without the bells and whistles that are added to the first version of the competition code. 
@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
     static driveBase drivebase = new driveBase();
-    static Flywheels flywheels = new Flywheels();
+    static Shooter flywheels = new Shooter();
     static Teleop teleop = new Teleop();
     static Autonomous auton = new Autonomous();
     static OI oiInput = new OI(0, 1);

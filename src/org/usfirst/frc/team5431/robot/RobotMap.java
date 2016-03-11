@@ -10,8 +10,12 @@ public class RobotMap {
 	public static int rearright = 3;
 	public static int rearleft = 7;
 	
-	public static int rightFlyWheel = 4;	//Mapping for Flywheel motors
-	public static int leftFlyWheel = 5;
+	public static int rightFlyWheel = 2;	//Mapping for Flywheel motors
+	public static int leftFlyWheel = 8;
+	public static int intake = 5;
+	public static int winch = 9;
+	public static int firstSolenoid = 1;
+	public static int secondSolenoid = 2;
 	
 	public static int rightBaseEnc1 = 0;	//Mapping for encoders' DIO ports
 	public static int rightBaseEnc2 = 1;
