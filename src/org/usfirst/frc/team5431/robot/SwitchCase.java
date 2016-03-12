@@ -119,7 +119,7 @@ public class SwitchCase {
 			case 0:
 				break;
 			case 1:
-				cameraVision.Update();
+				//cameraVision.Update();
 				Robot.flywheels.setFlywheelSpeed(shootSpeed);
 				autoAimTimer = System.currentTimeMillis() + 1000;
 				state = 2;

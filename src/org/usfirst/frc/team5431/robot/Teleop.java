@@ -100,6 +100,6 @@ public class Teleop {
 		if(input.joystickButton3){
 			currentShootState = 1;
 		}
-		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1)/2);
+		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
 	}
 }
