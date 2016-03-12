@@ -105,21 +105,22 @@ public class SwitchCase {
 					state = abortAutoAim;
 				break;
 			case 4:
-				autoAimRemoteState = shoot(autoAimRemoteState);
+				autoAimRemoteState = shoot(autoAimRemoteState, .8);//Remember to remove .8 with Vision.getSpeed() once camera is installed
 				if(autoAimRemoteState == 0)
 					state = 0;
 			}
 		return state;
 	}
 	
-	public static int shoot(int state){
+	public static int shoot(int state, double shootSpeed){//shootSpeed is temp since there is no camera at the time of coding
 		switch(state){
 		default:
 				break;
 			case 0:
 				break;
 			case 1:
-				Robot.flywheels.setFlywheelSpeed(Vision.getSpeed());
+				cameraVision.Update();
+				Robot.flywheels.setFlywheelSpeed(shootSpeed);
 				autoAimTimer = System.currentTimeMillis() + 1000;
 				state = 2;
 			case 2:
