@@ -128,17 +128,18 @@ public class SwitchCase {
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
 				SmartDashboard.putNumber("shootBug2", autoAimTimer);
-				if(System.currentTimeMillis() == autoAimTimer){
+				if(System.currentTimeMillis() >= autoAimTimer){
+					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 					Robot.flywheels.setIntakeSpeed(1);
 					autoAimIntakeTimer = System.currentTimeMillis() + 500;
+					SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
 					state = 3;
 				}
 				else
 					state = 2;
 				break;
 			case 3:
-				
-				if(System.currentTimeMillis() == autoAimIntakeTimer){
+				if(System.currentTimeMillis() >= autoAimIntakeTimer){
 					Robot.flywheels.setIntakeSpeed(0);
 					Robot.flywheels.setFlywheelSpeed(0);
 					state = 0;
