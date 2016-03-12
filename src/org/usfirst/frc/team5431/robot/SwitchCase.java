@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class SwitchCase {
 	private static double[] encodersDistance = {0};
 	private double[] encodersRPM = {0};
@@ -124,6 +126,8 @@ public class SwitchCase {
 				autoAimTimer = System.currentTimeMillis() + 1000;
 				state = 2;
 			case 2:
+				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
+				SmartDashboard.putNumber("shootBug2", autoAimTimer);
 				if(System.currentTimeMillis() == autoAimTimer){
 					Robot.flywheels.setIntakeSpeed(1);
 					autoAimIntakeTimer = System.currentTimeMillis() + 500;
@@ -133,6 +137,7 @@ public class SwitchCase {
 					state = 2;
 				break;
 			case 3:
+				
 				if(System.currentTimeMillis() == autoAimIntakeTimer){
 					Robot.flywheels.setIntakeSpeed(0);
 					Robot.flywheels.setFlywheelSpeed(0);
