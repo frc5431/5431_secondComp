@@ -58,7 +58,7 @@ public class Teleop {
 		prevIntakeOut = (input.xboxXVal ? 1:0);
 		if(Robot.flywheels.getIntakeSpeed() > 0.0){
 			SmartDashboard.putNumber("Bug", -1.54);
-			if(!Robot.flywheels.intakeLimit.get()){
+			if(!Robot.flywheels.intakeLimit.get() && currentShootState == 0){
 				SmartDashboard.putNumber("Bug", 1.345);
 				Robot.flywheels.setIntakeSpeed(0);
 				ballIn = true;
