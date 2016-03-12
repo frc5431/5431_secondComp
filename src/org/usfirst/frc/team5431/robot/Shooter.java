@@ -33,10 +33,10 @@ public class Shooter {
 		leftFW = new CANTalon(RobotMap.leftFlyWheel);
 		intakeMotor = new CANTalon(RobotMap.intake);
 		winchMotor = new CANTalon(RobotMap.winch);
-		winchMotor.reverseOutput(false);
-		intakeMotor.reverseOutput(false);
+		winchMotor.setInverted(false);
+		intakeMotor.setInverted(false);
 		rightFW.setInverted(true);
-		leftFW.reverseOutput(false);
+		leftFW.setInverted(false);
 		rightRpmEnc = new Encoder(RobotMap.rightFWEnc1, RobotMap.rightFWEnc2, false, EncodingType.k1X);
 		leftRpmEnc = new Encoder(RobotMap.leftFWEnc1, RobotMap.leftFWEnc2, false, EncodingType.k1X);
 		rightRpmEnc.setReverseDirection(false);
