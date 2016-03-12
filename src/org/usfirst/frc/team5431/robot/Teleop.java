@@ -67,7 +67,7 @@ public class Teleop {
 				ballIn = false;
 			}
 		}
-		
+		/*//Commented due to conflict between driver/shooter control over intake 
 		if(ballIn){
 			SmartDashboard.putNumber("Bug", -1);
 			if(input.joystickTriggerVal)
@@ -75,7 +75,7 @@ public class Teleop {
 			else
 				Robot.flywheels.setIntakeSpeed(0);
 		}
-		
+		*/
 		SmartDashboard.putNumber("Bug", 1.280000000006);
 		if((input.xboxBVal ? 1:0) > prevIntakeIn){
 			/*

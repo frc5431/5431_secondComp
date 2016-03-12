@@ -27,5 +27,5 @@ public class RobotMap {
 	public static int leftFWEnc1 = 16;
 	public static int leftFWEnc2 = 17;
 	
-	public static int intakeLim = 0;
+	public static int intakeLim = 9;
 }
