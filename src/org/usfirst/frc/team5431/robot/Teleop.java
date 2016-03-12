@@ -97,7 +97,7 @@ public class Teleop {
 		prevIntakeIn = (input.xboxBVal ? 1:0);
 		if(input.xboxYVal)
 			Robot.flywheels.climb();
-		if(input.xboxYVal){
+		if(input.joystickButton3){
 			currentShootState = 1;
 		}
 		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1)/2);
