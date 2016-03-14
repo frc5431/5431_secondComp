@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 /**
  * Class to control the flywheels and intake of the robot. Also does climber.
@@ -16,7 +17,6 @@ public class Shooter {
 	Solenoid secondClimbSolenoid;
 	DigitalInput intakeLimit;
 	CANTalon rightFW, leftFW, intakeMotor, winchMotor;
-	Encoder rightRpmEnc, leftRpmEnc;
 	
 	/**
 	 * Constructor for the Shooter() class. Assigns motors, encoders, and sets settings for them.
@@ -35,25 +35,13 @@ public class Shooter {
 		winchMotor = new CANTalon(RobotMap.winch);
 		winchMotor.setInverted(false);
 		intakeMotor.setInverted(false);
+		
 		rightFW.setInverted(true);
 		leftFW.setInverted(false);
-		rightRpmEnc = new Encoder(RobotMap.rightFWEnc1, RobotMap.rightFWEnc2, false, EncodingType.k1X);
-		leftRpmEnc = new Encoder(RobotMap.leftFWEnc1, RobotMap.leftFWEnc2, false, EncodingType.k1X);
-		rightRpmEnc.setReverseDirection(false);
-		leftRpmEnc.setReverseDirection(false);
-		rightRpmEnc.setSamplesToAverage(120);
-		leftRpmEnc.setSamplesToAverage(120);
-		rightRpmEnc.reset();
-		leftRpmEnc.reset();
-	}
-	/**
-	 * Resets encoders on the shooter flywheels. Make sure to reset the encoders
-	 * using this function. Note that there shouldn't be a need to reset the encoders since they
-	 * measure RPM.
-	 */
-	public void resetEncoders(){
-		leftRpmEnc.reset();
-		rightRpmEnc.reset();
+		rightFW.setFeedbackDevice(FeedbackDevice.EncRising);
+		leftFW.setFeedbackDevice(FeedbackDevice.EncRising);
+		leftFW.configEncoderCodesPerRev(1024);
+		rightFW.configEncoderCodesPerRev(1024);
 	}
 	
 	/**
@@ -61,15 +49,20 @@ public class Shooter {
 	 * @return double array where index 0 is the RPM of the right, and 1 is the RPM of the left.
 	 */
 	public double[] getRPM(){
-		double returnVals[] = {0};
-		returnVals[0] = (60/(360 * rightRpmEnc.getRate()));
-		returnVals[1] = (60/(360 * leftRpmEnc.getRate()));
+		double returnVals[] = {0,0};
+		//the 600 is multiplied for 2 reasons:
+		//1 - getEncVelocity() returns it as RPS (rotations per second), so you multiply it by 60
+		//2 - getEncVelocity() returns it as  1/10th as the actual RPS, so you multiply it by 10
+		// thus, 60*10 = 600
+		returnVals[0] = ((600*leftFW.getEncVelocity())/1024);
+		returnVals[1] = ((600*rightFW.getEncVelocity())/1024);
 		return returnVals;
 	}
 	
 	public void setFlywheelSpeed(double speed){
 		rightFW.set(speed);
 		leftFW.set(speed);
+		Robot.table.putBoolean("turret", speed>0);
 	}
 	
 	public double getFlywheelSpeed(){
@@ -77,6 +70,8 @@ public class Shooter {
 	}
 	public void setIntakeSpeed(double speed){
 		intakeMotor.set(speed);
+		Robot.table.putBoolean("intake", speed!=0);
+		Robot.table.putBoolean("INTAKE-REVERSE", speed<0);
 	}
 	public double getIntakeSpeed(){
 		return intakeMotor.get();

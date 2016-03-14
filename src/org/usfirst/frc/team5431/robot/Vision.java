@@ -1,5 +1,7 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * This class does Vision processing.
  * 
@@ -35,6 +37,7 @@ public class Vision {
 			grip = new Grip();
 		} catch (Throwable initError) {
 			Robot.table.putString("ERROR", "Error initializing grip");
+			SmartDashboard.putString("stringBug", "Error initializing grip");
 		}
 	}
 	
@@ -52,6 +55,13 @@ public class Vision {
 		distances = grip.distance(math);
 		fromCenters = grip.fromCenter(this.screenHalf, math);
 		holeSolids = grip.solidity();
+		SmartDashboard.putNumber("Hole Area", areas[0]);
+		SmartDashboard.putNumber("Hole distance", distances[0]);
+		SmartDashboard.putNumber("Hole fromCenter", fromCenters[0]);
+		SmartDashboard.putNumber("holeSolids", holeSolids[0]);
+		Robot.table.putNumber("HOLE-AREA", areas[0]);
+		Robot.table.putNumber("HOLE-DISTANCE", distances[0]);
+		Robot.table.putNumber("HOLE-SOLIDITY", holeSolids[0]);
 	}
 
 	private void calcVals() {
@@ -86,7 +96,7 @@ public class Vision {
 																	// turn the
 																	// turrent
 
-			Robot.table.putNumber("AUTO-AIM-SPEED", this.getSpeed());
+			Robot.table.putNumber("AUTO-AIM-SPEED", Vision.getSpeed());
 
 			if ((manVals[1] == 0) && (manVals[0] == 0)) {
 				Robot.table.putString("FIRE", "F");

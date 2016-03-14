@@ -15,8 +15,10 @@ public class Teleop {
 	private int prevIntakeIn = 0;
 	private int prevIntakeOut = 0;
 	private int currentShootState = 0;
+	private int currentAutoAimState = 0;
 	private boolean ballIn = false;
 	private boolean overrideLimit = false;
+	
 	/**
 	 * Teleop constructor for the Teleop class. Other than being a constructor, 
 	 * this does nothing special.
@@ -30,13 +32,15 @@ public class Teleop {
 	 * @param input OI object that should also be updated in teleopPeriodic().
 	 */
 	public void Update(OI input){
+		//
+		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.75);
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
 			if(Robot.flywheels.getFlywheelSpeed() > 0.0)
 				Robot.flywheels.setFlywheelSpeed(0.0);
 			else
-				Robot.flywheels.setFlywheelSpeed((input.joystickPotentiometerVal + 1) / 2);				
+				Robot.flywheels.setFlywheelSpeed(Robot.table.getNumber("OVERDRIVE", 0)+0.0);				
 		}
 		prevFlywheel = (input.joystickButton2 ? 1:0);
 		/*
@@ -48,14 +52,17 @@ public class Teleop {
 			Robot.flywheels.setIntakeSpeed(0.0);
 			*/
 		
-		if((input.xboxXVal ? 1:0) > prevIntakeOut){
+		final boolean intakeon = input.xbox.getRawAxis(3)>0.2;
+		final boolean intakereverse = input.xbox.getRawAxis(2)>0.2;
+		
+		if((intakereverse ? 1:0) > prevIntakeOut){
 			if(Robot.flywheels.getIntakeSpeed() < 0.0)
 				Robot.flywheels.setIntakeSpeed(0);
 			else
 				Robot.flywheels.setIntakeSpeed(-1.0);
 			//Intake in
 		}
-		prevIntakeOut = (input.xboxXVal ? 1:0);
+		prevIntakeOut = (intakereverse ? 1:0);
 		if(Robot.flywheels.getIntakeSpeed() > 0.0){
 			SmartDashboard.putNumber("Bug", -1.54);
 			if(!Robot.flywheels.intakeLimit.get() && currentShootState == 0){
@@ -68,6 +75,7 @@ public class Teleop {
 				ballIn = false;
 			}
 		}
+		Robot.table.putBoolean("boulder", ballIn);
 		/*//Commented due to conflict between driver/shooter control over intake 
 		if(ballIn){
 			SmartDashboard.putNumber("Bug", -1);
@@ -78,7 +86,7 @@ public class Teleop {
 		}
 		*/
 		SmartDashboard.putNumber("Bug", 1.280000000006);
-		if((input.xboxBVal ? 1:0) > prevIntakeIn){
+		if((intakeon ? 1:0) > prevIntakeIn){
 			/*
 			if(Robot.flywheels.intakeLimit.get()){
 				overrideLimit = true;
@@ -91,15 +99,23 @@ public class Teleop {
 			if(Robot.flywheels.getIntakeSpeed() != 0.0)
 				Robot.flywheels.setIntakeSpeed(0);
 			else
-				Robot.flywheels.setIntakeSpeed(1.0);
+				Robot.flywheels.setIntakeSpeed(Robot.table.getNumber("intake max",0.0));
 			//Intake out
 		}
-		prevIntakeIn = (input.xboxBVal ? 1:0);
+		prevIntakeIn = (intakeon ? 1:0);
 		if(input.xboxYVal)
 			Robot.flywheels.climb();
-		if(input.joystickButton3){
+		if(input.joystickButton3 && currentAutoAimState == 0){
 			currentShootState = 1;
 		}
-		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
+		if(input.joystickButton4 && currentShootState == 0){
+			currentAutoAimState = 1;
+		}
+		
+		SmartDashboard.putNumber("currentShootState", currentShootState);
+		SmartDashboard.putNumber("currentAutoAimState", currentAutoAimState);
+		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);
+		//currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
+		currentShootState = SwitchCase.shoot(currentShootState, 0.0);
 	}
 }

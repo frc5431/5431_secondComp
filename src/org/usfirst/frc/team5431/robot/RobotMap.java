@@ -18,10 +18,10 @@ public class RobotMap {
 	public static int secondSolenoid = 2;
 	
 	
-	public static int rightBaseEnc1 = 10;	//Mapping for encoders' DIO ports
-	public static int rightBaseEnc2 = 11;
-	public static int leftBaseEnc1 = 12;
-	public static int leftBaseEnc2 = 13;
+	public static int rightBaseEnc1 = 0;	//Mapping for encoders' DIO ports
+	public static int rightBaseEnc2 = 1;
+	public static int leftBaseEnc1 = 2;
+	public static int leftBaseEnc2 = 3;
 	public static int rightFWEnc1 = 14;
 	public static int rightFWEnc2 = 15;
 	public static int leftFWEnc1 = 16;

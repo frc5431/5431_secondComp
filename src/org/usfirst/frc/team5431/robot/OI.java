@@ -20,6 +20,7 @@ public class OI {
 	public boolean joystickTriggerVal = false;
 	public boolean joystickButton2 = false;
 	public boolean joystickButton3 = false;
+	public boolean joystickButton4 = false;
 	
 	private int xboxRightJoy = 1;
 	private int xboxLeftJoy = 5;
@@ -31,6 +32,7 @@ public class OI {
 	private int joystickTrigger = 1;
 	private int joystickButtonLabeled2 = 2;
 	private int joystickButtonLabeled3 = 3;
+	private int joystickButtonLabeled4 = 4;
 	
 	public OI(int xboxPort, int joystickPort){
 		xbox = new Joystick(xboxPort);
@@ -48,6 +50,7 @@ public class OI {
 		joystickTriggerVal = joystick.getRawButton(joystickTrigger);
 		joystickButton2 = joystick.getRawButton(joystickButtonLabeled2);
 		joystickButton3 = joystick.getRawButton(joystickButtonLabeled3);
+		joystickButton4 = joystick.getRawButton(joystickButtonLabeled4);
 		//Add joystick stuff if we ever need a joystick
 	}
 }

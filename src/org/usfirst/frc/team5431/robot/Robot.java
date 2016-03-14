@@ -28,7 +28,11 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-    	table = NetworkTable.getTable("5431");
+    	
+    	//table = NetworkTable.getTable("5431");
+    	//NetworkTable.setServerMode();
+		//NetworkTable.setIPAddress("roborio-5431-frc.local");
+		table = NetworkTable.getTable("5431");
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
@@ -45,9 +49,16 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
+    	Robot.table.putBoolean("AUTO", true);
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
+    }
+    
+    public void disabledPeriodic(){
+    	Robot.table.putBoolean("AUTO", false);
+    	Robot.table.putBoolean("ENABLED", false);
+    	Robot.table.putBoolean("connection", true);
     }
 
     /**
@@ -66,6 +77,8 @@ public class Robot extends IterativeRobot {
     	}
     	*/
     	auton.updateStates();
+    	Robot.table.putBoolean("connection", true);
+    	Robot.table.putBoolean("AUTO", true);
     }
 
     /**
@@ -75,6 +88,14 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         oiInput.updateVals();
         teleop.Update(oiInput);
+        Robot.table.putBoolean("ENABLED", true);
+        Robot.table.putBoolean("connection", true);
+        final double[] rpms = flywheels.getRPM();
+		Robot.table.putNumber("FLY-LEFT", rpms[0]);
+		Robot.table.putNumber("FLY-RIGHT", rpms[1]);
+		final double[] driverpm = drivebase.getEncDistance();
+		Robot.table.putNumber("DRIVE-DISTANCE-LEFT", driverpm[0]);
+		Robot.table.putNumber("DRIVE-DISTANCE-RIGHT", driverpm[1]);
     }
     
     /**

@@ -3,6 +3,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.robot.Robot;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class that gets values from Grip and sends them to VisionMath.java
@@ -17,9 +18,10 @@ public class Grip {
 	
 	public Grip() {
 		try {
-			grip = NetworkTable.getTable("GRIP/vision");
+			grip = NetworkTable.getTable("GRIP/vision2");
 		} catch(Throwable gripError) {
 			Robot.table.putString("ERROR", "Couldn't get grip table");
+			SmartDashboard.putString("gripBug", "Can't get grip table");
 			gripError.printStackTrace();
 		}
 	}
@@ -60,14 +62,19 @@ public class Grip {
 		final double objects[] = 
 				this.getY(), 
 				distances[] = {0};
-		int num = 0;
-		for(double object : objects) { //Get distance for each object
-			distances[num] = math.DistanceCalc(object); //Change based on regression
-			num++;
+		try{
+			int num = 0;
+			for(double object : objects) { //Get distance for each object
+				distances[num] = math.DistanceCalc(object); //Change based on regression
+				//num++;
+			}
+			return distances;
 		}
-		return distances;
+		catch (Throwable e){
+			double failArray[] = {666};
+			return failArray;
+		}
 	}
-	
 	/**
 	 * Gets the distance from the center of the screen in pixels of all the holes from the {@link NetworkTable}
 	 * 
@@ -82,7 +89,7 @@ public class Grip {
 		int num = 0;
 		for(double object : objects) { //Find distance from each object from the center
 			distances[num] = math.fromCenter(HalfSize, object);
-			num++;
+			//num++;
 		}
 		return distances;
 	}
@@ -110,6 +117,7 @@ public class Grip {
 	 * */
 	public double[] area() { //Get area for each object
 		final double areas[] = grip.getNumberArray("area", this.defaults);
+		//SmartDashboard.putNumber("HoletrueArea", areas[0]);
 		return (this.mult(areas)) ? areas : this.defaults;
 	}
 	

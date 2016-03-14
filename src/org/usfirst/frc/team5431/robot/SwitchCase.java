@@ -6,9 +6,9 @@ public class SwitchCase {
 	private static double[] encodersDistance = {0};
 	private double[] encodersRPM = {0};
 	private static double driveForwardDistance = driveForwardDistance = driveBase.wheelDiameter * Math.PI * 10;//10 is distance in inches - must change;
-	private static Vision cameraVision;
+	private static Vision cameraVision = new Vision();
 	
-	public static int abortAutoAim = -42;		//Get the joke, anyone?
+	public final static int abortAutoAim = -42;		//Get the joke, anyone?
 	private static long autoAimTimer = 0;
 	private static long autoAimIntakeTimer = 0;
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
@@ -55,15 +55,18 @@ public class SwitchCase {
 	 * @return state
 	 */
 	public static int autoAim(int state){
+		Robot.table.putBoolean("AUTO", state>0);
 		switch(state){
 			default:
 				break;
 			case 0:
+				cameraVision.Update();
 				break;
 			case 1:
 				//David's autoAim checking happens here
 				cameraVision.Update();
 				if(Vision.manVals[0] == 0 && Vision.manVals[1] == 0){
+					autoAimRemoteState = 1;
 					state = 4;
 				}
 				else
@@ -93,6 +96,7 @@ public class SwitchCase {
 					else{
 						state = 4;
 						autoAimRemoteState = 1;
+						SmartDashboard.putNumber("remoteBugIn", autoAimRemoteState);
 					}
 				}
 				else if(Vision.manVals[1] == 1){
@@ -107,9 +111,12 @@ public class SwitchCase {
 					state = abortAutoAim;
 				break;
 			case 4:
+				SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
 				autoAimRemoteState = shoot(autoAimRemoteState, .8);//Remember to remove .8 with Vision.getSpeed() once camera is installed
-				if(autoAimRemoteState == 0)
+				if(autoAimRemoteState == 4)
 					state = 0;
+			case abortAutoAim:
+				SmartDashboard.putString("Bug", "Failed to AutoAim");
 			}
 		return state;
 	}
@@ -122,8 +129,9 @@ public class SwitchCase {
 				break;
 			case 1:
 				//cameraVision.Update();
-				Robot.flywheels.setFlywheelSpeed(shootSpeed);
-				autoAimTimer = System.currentTimeMillis() + 1000;
+				Robot.table.putBoolean("AUTO", true);
+				Robot.flywheels.setFlywheelSpeed(shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0));
+				autoAimTimer = System.currentTimeMillis() + 2500;
 				state = 2;
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
@@ -131,7 +139,7 @@ public class SwitchCase {
 				if(System.currentTimeMillis() >= autoAimTimer){
 					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 					Robot.flywheels.setIntakeSpeed(1);
-					autoAimIntakeTimer = System.currentTimeMillis() + 500;
+					autoAimIntakeTimer = System.currentTimeMillis() + 750;
 					SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
 					state = 3;
 				}
@@ -140,12 +148,16 @@ public class SwitchCase {
 				break;
 			case 3:
 				if(System.currentTimeMillis() >= autoAimIntakeTimer){
+					Robot.table.putBoolean("AUTO", false);
 					Robot.flywheels.setIntakeSpeed(0);
 					Robot.flywheels.setFlywheelSpeed(0);
-					state = 0;
+					state = 4;
 				}
 				else
 					state = 3;
+				break;
+			case 4:			//This is to allow remoteStates to know when program is done
+				state = 0;
 				break;
 		}
 		return state;

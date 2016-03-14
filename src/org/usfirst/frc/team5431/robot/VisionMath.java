@@ -32,7 +32,7 @@ public class VisionMath {
 	 * @return The distance from the hole
 	 * */
 	public double DistanceCalc(double pixelsFromTop) {
-		return ((50.6234) * Math.pow(1.0072, pixelsFromTop)); //THE NEW BOT (SHOULD BE VERY CLOSE)
+		return ((44.1401) * Math.pow(1.0068, pixelsFromTop)); //THE NEW BOT (SHOULD BE VERY CLOSE)
 	}
 	
 	public double SpeedCalc(double distanceFromTower) {
