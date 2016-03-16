@@ -26,7 +26,8 @@ public class driveBase {
 	 * to set the driveBase to brake, use driveBase(brakeMode).
 	 */
 	public driveBase(){
-		this.frontright = new CANTalon(RobotMap.frontright);				//Instantiates CANTalons based on mapping in RobotMap
+		this.frontright = new CANTalon(RobotMap.frontright);
+		//Instantiates CANTalons based on mapping in RobotMap
 		this.frontleft = new CANTalon(RobotMap.frontleft);
 		this.rearright = new CANTalon(RobotMap.rearright);
 		this.rearleft = new CANTalon(RobotMap.rearleft);
@@ -73,6 +74,7 @@ public class driveBase {
 			rearright.enableBrakeMode(false);
 			rearleft.enableBrakeMode(false);
 		}
+		tankDriveBase = new RobotDrive(frontleft, rearleft, frontright, rearright);
 		rightBaseEncoder = new Encoder(RobotMap.rightBaseEnc1, RobotMap.rightBaseEnc2, false, EncodingType.k4X);
 		leftBaseEncoder = new Encoder(RobotMap.leftBaseEnc1, RobotMap.leftBaseEnc2, false, EncodingType.k4X);
 		rightBaseEncoder.setDistancePerPulse(distancePerPulse);

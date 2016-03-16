@@ -17,11 +17,15 @@ public class Shooter {
 	Solenoid secondClimbSolenoid;
 	DigitalInput intakeLimit;
 	CANTalon rightFW, leftFW, intakeMotor, winchMotor;
+	static int rpmdelay=0;
+	static double rpmbooster=0;
 	
 	/**
 	 * Constructor for the Shooter() class. Assigns motors, encoders, and sets settings for them.
 	 * Encoders are reset after all the motors/encoders are assigned.
-	 * Do not reset encoders by calling this multiple times. If you do so, you are an idiot. Period.
+	 * Do not reset encoders by lm,]
+	 * '
+	 * g\calling this multiple times. If you do so, you are an idiot. Period.
 	 */
 	public Shooter(){
 		intakeLimit = new DigitalInput(RobotMap.intakeLim);
@@ -59,10 +63,27 @@ public class Shooter {
 		return returnVals;
 	}
 	
+	private static boolean intendedRPM(){
+		return false;
+	}
+	
+	private static void checkRPM(double volts, double[] actual){
+		if(rpmdelay>0){
+			rpmdelay--;
+			return;
+		}
+		//if()
+	}
+	
 	public void setFlywheelSpeed(double speed){
 		rightFW.set(speed);
 		leftFW.set(speed);
-		Robot.table.putBoolean("turret", speed>0);
+		final boolean running = speed>0;
+		if(running){
+			rpmbooster=0;
+			rpmdelay = 3000;
+		}
+		Robot.table.putBoolean("turret", running);
 	}
 	
 	public double getFlywheelSpeed(){

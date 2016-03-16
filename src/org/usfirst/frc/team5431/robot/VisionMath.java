@@ -35,9 +35,11 @@ public class VisionMath {
 		return ((44.1401) * Math.pow(1.0068, pixelsFromTop)); //THE NEW BOT (SHOULD BE VERY CLOSE)
 	}
 	
-	public double SpeedCalc(double distanceFromTower) {
+	/*
+	public double PowerCalc(double distanceFromTower) {
 		return Math.pow((10.9685 * distanceFromTower), -0.5264);//((3.4028) - (0.5551 * Math.log(distanceFromTower))) + override;
-	}
+		//1.454
+	}*/
 	
 	/**
 	 * Checks the distance of a location from the center of the camera
@@ -47,6 +49,32 @@ public class VisionMath {
 	 * */
 	public double fromCenter(double half, double current) {
 		return current - half;
+	}
+	
+	public double[] RPMCalc(double distanceCalc, double[] currentRPM, double[] currentPWR) {
+		double[] rpms = { 0, 0 };
+		double[] speeds = { 0, 0};
+		double moveMent = 0.001;
+		
+		
+		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY
+		rpms[1] = rpms[0] + 200;
+		
+		//LEFT-SIDE
+		if(currentRPM[0] < rpms[0]) {
+			speeds[0] = (rpms[0] - currentRPM[0]) * moveMent;
+		} else if(currentRPM[0] > rpms[0]) {
+			
+		} else {
+			
+		}
+		
+		if(current[1] < rpms[1]) {
+			
+		}
+		
+		
+		return rpms;		
 	}
 	
 	double largest = 0; //Don't mess

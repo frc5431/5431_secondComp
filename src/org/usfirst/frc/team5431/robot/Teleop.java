@@ -33,7 +33,7 @@ public class Teleop {
 	 */
 	public void Update(OI input){
 		//
-		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.75);
+		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875);
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
@@ -99,19 +99,20 @@ public class Teleop {
 			if(Robot.flywheels.getIntakeSpeed() != 0.0)
 				Robot.flywheels.setIntakeSpeed(0);
 			else
-				Robot.flywheels.setIntakeSpeed(Robot.table.getNumber("intake max",0.0));
+				Robot.flywheels.setIntakeSpeed(1.0);
 			//Intake out
 		}
 		prevIntakeIn = (intakeon ? 1:0);
 		if(input.xboxYVal)
 			Robot.flywheels.climb();
-		if(input.joystickButton3 && currentAutoAimState == 0){
+		if(input.joystickTriggerVal && currentAutoAimState == 0){
 			currentShootState = 1;
 		}
 		if(input.joystickButton4 && currentShootState == 0){
 			currentAutoAimState = 1;
 		}
-		
+		SmartDashboard.putBoolean("intakeon", intakeon);
+		SmartDashboard.putBoolean("intakeReverse", intakereverse);
 		SmartDashboard.putNumber("currentShootState", currentShootState);
 		SmartDashboard.putNumber("currentAutoAimState", currentAutoAimState);
 		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);

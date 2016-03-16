@@ -75,8 +75,13 @@ public class SwitchCase {
 			case 2:
 				//If David's autoAim code says to shoot
 				cameraVision.Update();
+				//WE ARE IGNORING CASE 3 DUE TO BUGTESTING.
+				//REPEAT: WE ARE IGNORING CASE 3 DUE TO BUGTESTING. FIX.
+				//FIX.
+				//FIX.
+				//You get it now, right?
 				if(Vision.manVals[0] == 0)
-					state = 3;
+					state = 4;
 				else if(Vision.manVals[0] == 1){
 					Robot.drivebase.drive(-0.5,  0.5);
 					state = 2;
@@ -84,6 +89,9 @@ public class SwitchCase {
 				else if(Vision.manVals[0] == 2){
 					Robot.drivebase.drive(0.5,  -0.5);
 					state = 2;
+				}
+				else if(Vision.manVals[0] == 666){
+					SmartDashboard.putString("ERROR", "Vision failed");
 				}
 				else
 					state = abortAutoAim; //manVals[0] should only be 0-2. Nothing else. Somethign is wrong.
@@ -159,6 +167,14 @@ public class SwitchCase {
 			case 4:			//This is to allow remoteStates to know when program is done
 				state = 0;
 				break;
+			case 5://We are doing auto-adjust speed
+				cameraVision.Update();
+				Robot.table.putBoolean("AUTO", true);
+				Robot.flywheels.setFlywheelSpeed(Vision.getSpeed());
+				state = 6;
+			case 6:
+				
+				
 		}
 		return state;
 	}
