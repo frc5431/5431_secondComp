@@ -27,5 +27,5 @@ public class RobotMap {
 		rightFWEnc2 = 15,
 		leftFWEnc1 = 16,
 		leftFWEnc2 = 17,
-		intakeLim = 9;
+		intakeLim = 8;
 }

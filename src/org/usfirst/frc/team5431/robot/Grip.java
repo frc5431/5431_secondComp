@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Grip {
 	
-	private NetworkTable grip;
-	private final double[] defaults = {0, 0, 0, 0};
+	private static NetworkTable grip;
+	private static final double[] defaults = {0, 0, 0, 0};
 	
 	public Grip() {
 		try {
-			grip = NetworkTable.getTable("GRIP/vision2");
+			grip = NetworkTable.getTable("GRIP/vision");
 		} catch(Throwable gripError) {
 			Robot.table.putString("ERROR", "Couldn't get grip table");
 			SmartDashboard.putString("gripBug", "Can't get grip table");
@@ -39,8 +39,8 @@ public class Grip {
 	 * @return Array of all the hole values, where the index is the hole ID. If an array of 0 is returned, a problem occured.
 	 * */
 	public double[] getX() {
-		final double holesY[] = grip.getNumberArray("centerX", this.defaults);
-		return (this.mult(holesY)) ? holesY : this.defaults; //Same for all below return array 0 if a problem
+		final double holesY[] = grip.getNumberArray("centerX", defaults);
+		return (mult(holesY)) ? holesY : defaults; //Same for all below return array 0 if a problem
 	}
 	
 	/**
@@ -50,8 +50,8 @@ public class Grip {
 
 	 * */
 	public double[] getY() {
-		final double holesX[] = grip.getNumberArray("centerY", this.defaults);
-		return (this.mult(holesX)) ? holesX : this.defaults;
+		final double holesX[] = grip.getNumberArray("centerY", defaults);
+		return (mult(holesX)) ? holesX : defaults;
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class Grip {
 	 * */
 	public double[] distance(VisionMath math) {
 		final double objects[] = 
-				this.getY(), 
+				getY(), 
 				distances[] = {0};
 		try{
 			int num = 0;
@@ -83,15 +83,19 @@ public class Grip {
 
 	 * */
 	public double[] fromCenter(double HalfSize, VisionMath math) {
-		final double objects[] = 
-				this.getX(),
-				distances[] = {0};
-		int num = 0;
-		for(double object : objects) { //Find distance from each object from the center
-			distances[num] = math.fromCenter(HalfSize, object);
-			num++;
+		try {
+			final double objects[] = 
+					getX(),
+					distances[] = {0};
+			int num = 0;
+			for(double object : objects) { //Find distance from each object from the center
+				distances[num] = math.fromCenter(HalfSize, object);
+				num++;
+			}
+			return distances;
+		} catch(Throwable error) {
+			return defaults;
 		}
-		return distances;
 	}
 	
     //check if returned array is good
@@ -116,8 +120,8 @@ public class Grip {
 
 	 * */
 	public double[] area() { //Get area for each object
-		final double areas[] = grip.getNumberArray("area", this.defaults);
-		return (this.mult(areas)) ? areas : this.defaults;
+		final double areas[] = grip.getNumberArray("area", defaults);
+		return (mult(areas)) ? areas : defaults;
 	}
 	
 	/**
@@ -127,8 +131,8 @@ public class Grip {
 
 	 * */
 	public double[] solidity() { //Get solidity of object 0-100
-		final double solidities[] = grip.getNumberArray("solidity", this.defaults);
-		return (this.mult(solidities)) ? solidities : this.defaults;
+		final double solidities[] = grip.getNumberArray("solidity", defaults);
+		return (mult(solidities)) ? solidities : defaults;
 	}
 	
 }

@@ -57,12 +57,12 @@ public class VisionMath {
 		
 		//LEFT-SIDE
 		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY (DISTANCE-RPM (NEEDED))
-		speeds[3] = ((rpms[0] - currentRPM[0]) * moveMentLeft);
-		speeds[0] = currentPWR + speeds[3];
+		speeds[2] = ((rpms[0] - currentRPM[0]) * moveMentLeft);
+		speeds[0] = currentPWR + speeds[2];
 		
 		rpms[1] = rpms[0] + 200;
-		speeds[4] = ((rpms[1] - currentRPM[1]) * moveMentRight);
-		speeds[1] = currentPWR + speeds[4];
+		speeds[3] = ((rpms[1] - currentRPM[1]) * moveMentRight);
+		speeds[1] = currentPWR + speeds[3];
 		return speeds;
 	}
 	

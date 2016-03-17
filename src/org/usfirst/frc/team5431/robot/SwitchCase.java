@@ -11,8 +11,9 @@ public class SwitchCase {
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
 	private static long autoAimTimer = 0;
 	private static long autoAimIntakeTimer = 0;
+	private static long autoAimManualTimer = 0;
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
-	
+	private static double[] off = {0, 0};
 	public SwitchCase() {
 		
 	}
@@ -127,15 +128,18 @@ public class SwitchCase {
 					state = 0;
 			case abortAutoAim:
 				SmartDashboard.putString("Bug", "Failed to AutoAim");
+			case -1:
+				Robot.flywheels.setFlywheelSpeed(off);
+				Robot.flywheels.setIntakeSpeed(0);
+				state = 0;
 			}
 		return state;
 	}
 	
 	public static int shoot(int state, double shootSpeed){//shootSpeed is temp since there is no camera at the time of coding
 		double toSetSpeed = shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0);
-		double[] off = {0, 0};
 		cameraVision.Update();
-		
+		SmartDashboard.putNumber("SysTime", System.currentTimeMillis());
 		switch(state){
 		default:
 				break;
@@ -150,10 +154,12 @@ public class SwitchCase {
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
 				SmartDashboard.putNumber("shootBug2", autoAimTimer);
-				//if(System.currentTimeMillis() >= autoAimTimer){
+				
 				double[] curRPM = Robot.flywheels.getRPM();
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
-				if(cameraVision.withIn(speedsTwo[3], -0.08, 0.08) && cameraVision.withIn(speedsTwo[4], -0.08, 0.08)) {
+				if(cameraVision.withIn(speedsTwo[2], -0.3, 0.3) && cameraVision.withIn(speedsTwo[3], -0.3, 0.3)) {
+				//if(System.currentTimeMillis() >= autoAimTimer){
+					SmartDashboard.putString("LEFTRIGHT", String.valueOf(speedsTwo[2]) + ":" + String.valueOf(speedsTwo[3]));
 					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 					Robot.flywheels.setIntakeSpeed(1);
 					autoAimIntakeTimer = System.currentTimeMillis() + 750;
@@ -176,7 +182,39 @@ public class SwitchCase {
 			case 4:			//This is to allow remoteStates to know when program is done
 				state = 0;
 				break;
-				
+			case -1://You are aborting
+				Robot.flywheels.setIntakeSpeed(0);
+				Robot.flywheels.setFlywheelSpeed(off);
+				state = 0;
+		}
+		return state;
+	}
+	
+	public static int shootManual(int state){
+		switch(state){
+		default:
+			break;
+		case 0:
+			break;
+		case 1:
+			autoAimManualTimer = System.currentTimeMillis() + 750;
+			Robot.flywheels.setIntakeSpeed(1);
+			state = 2;
+			break;
+		case 2:
+			SmartDashboard.putNumber("autoAimManualTimer", autoAimManualTimer);
+			if(autoAimManualTimer >= System.currentTimeMillis()){
+				Robot.flywheels.setIntakeSpeed(0);
+				state = 3;
+			}
+			break;
+		case 3://In case you want to know that it is done
+			state = 0;
+			break;
+		case -1:
+			Robot.flywheels.setIntakeSpeed(0);
+			state = 0;
+			break;
 		}
 		return state;
 	}
