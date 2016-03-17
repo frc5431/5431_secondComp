@@ -5,27 +5,27 @@ package org.usfirst.frc.team5431.robot;
  *
  */
 public class RobotMap {
-	public static int frontright = 4;		//Mapping for driveBase motors
-	public static int frontleft = 6;
-	public static int rearright = 3;
-	public static int rearleft = 7;
-	
-	public static int rightFlyWheel = 2;	//Mapping for Flywheel motors
-	public static int leftFlyWheel = 8;
-	public static int intake = 5;
-	public static int winch = 9;
-	public static int firstSolenoid = 1;
-	public static int secondSolenoid = 2;
-	
-	
-	public static int rightBaseEnc1 = 0;	//Mapping for encoders' DIO ports
-	public static int rightBaseEnc2 = 1;
-	public static int leftBaseEnc1 = 2;
-	public static int leftBaseEnc2 = 3;
-	public static int rightFWEnc1 = 14;
-	public static int rightFWEnc2 = 15;
-	public static int leftFWEnc1 = 16;
-	public static int leftFWEnc2 = 17;
-	
-	public static int intakeLim = 9;
+	public static final int 
+		frontright = 4,		//Mapping for driveBase motors
+		frontleft = 6,
+		rearright = 3,
+		rearleft = 7,
+		
+		
+		rightFlyWheel = 2,	//Mapping for Flywheel motors
+		leftFlyWheel = 8,
+		intake = 5,
+		winch = 9,
+		firstSolenoid = 1,
+		secondSolenoid = 2,
+		
+		rightBaseEnc1 = 0,	//Mapping for encoders' DIO ports
+		rightBaseEnc2 = 1,
+		leftBaseEnc1 = 2,
+		leftBaseEnc2 = 3,
+		rightFWEnc1 = 14,
+		rightFWEnc2 = 15,
+		leftFWEnc1 = 16,
+		leftFWEnc2 = 17,
+		intakeLim = 9;
 }

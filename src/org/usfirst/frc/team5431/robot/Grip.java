@@ -66,7 +66,7 @@ public class Grip {
 			int num = 0;
 			for(double object : objects) { //Get distance for each object
 				distances[num] = math.DistanceCalc(object); //Change based on regression
-				//num++;
+				num++;
 			}
 			return distances;
 		}
@@ -89,7 +89,7 @@ public class Grip {
 		int num = 0;
 		for(double object : objects) { //Find distance from each object from the center
 			distances[num] = math.fromCenter(HalfSize, object);
-			//num++;
+			num++;
 		}
 		return distances;
 	}
@@ -117,7 +117,6 @@ public class Grip {
 	 * */
 	public double[] area() { //Get area for each object
 		final double areas[] = grip.getNumberArray("area", this.defaults);
-		//SmartDashboard.putNumber("HoletrueArea", areas[0]);
 		return (this.mult(areas)) ? areas : this.defaults;
 	}
 	

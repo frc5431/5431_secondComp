@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Vision {
-	public volatile static VisionMath math;
-	public Grip grip;
-	public volatile double screenHalf = 120, offVal = 0;
+	public static VisionMath math;
+	public static Grip grip;
+	public static final double screenHalf = 120, offVal = 0;
 
-	private static volatile double[] areas = { 0 }, distances = { 0 }, fromCenters = { 0 }, holeSolids = { 0 };
+	private static double[] areas = { 0 }, distances = { 0 }, fromCenters = { 0 }, holeSolids = { 0 };
 
-	public static volatile double area = 0, distance = 0, fromCenter = 0, holeSolid = 0;
+	public static double area = 0, distance = 0, fromCenter = 0, holeSolid = 0;
 	
 	/**
 	 * Contains information about position of robot/actions needed to be taken
@@ -26,7 +26,7 @@ public class Vision {
 	 * <ol>0 - Whether or not to turn to shoot. 0 is SHOOT, 1 is for Turn Left, 2 is for Turn Right</ol>
 	 * <ol>1 - Whether or not to move forward/back. 0 is SHOOT, 1 is for Drive Back, 2 is for Drive Forward</ol>
 	 */
-	public static volatile double[] manVals = { 0, 0, 0 };
+	public static final double[] manVals = { 0, 0, 0 };
 	
 	/**
 	 * Constructor for the Vision() class.
@@ -47,21 +47,16 @@ public class Vision {
 	 */
 	public void Update(){
 		this.updateVals();
-		this.calcVals();
+		try {
+			this.calcVals();
+		} catch(Throwable error) {}
 	}
 	
 	private void updateVals() {
 		areas = grip.area();
 		distances = grip.distance(math);
-		fromCenters = grip.fromCenter(this.screenHalf, math);
+		fromCenters = grip.fromCenter(screenHalf, math);
 		holeSolids = grip.solidity();
-		SmartDashboard.putNumber("Hole Area", areas[0]);
-		SmartDashboard.putNumber("Hole distance", distances[0]);
-		SmartDashboard.putNumber("Hole fromCenter", fromCenters[0]);
-		SmartDashboard.putNumber("holeSolids", holeSolids[0]);
-		Robot.table.putNumber("HOLE-AREA", areas[0]);
-		Robot.table.putNumber("HOLE-DISTANCE", distances[0]);
-		Robot.table.putNumber("HOLE-SOLIDITY", holeSolids[0]);
 	}
 
 	private void calcVals() {
@@ -75,7 +70,7 @@ public class Vision {
 		Robot.table.putNumber("HOLE-NUM", toShoot); // Display to dashboard what
 													// to shoot at
 		if (toShoot != 666) {// Don't shoot at nothing (THE DEVIL)
-			final double tempCenter = grip.fromCenter(this.screenHalf, math)[toShoot]; // Temp
+			final double tempCenter = grip.fromCenter(screenHalf, math)[toShoot]; // Temp
 																					// center
 																					// values
 			// Display values to SmartDashboard!
@@ -96,7 +91,7 @@ public class Vision {
 																	// turn the
 																	// turrent
 
-			Robot.table.putNumber("AUTO-AIM-SPEED", Vision.getSpeed());
+			Robot.table.putNumber("AUTO-AIM-SPEED", getSpeed());
 
 			if ((manVals[1] == 0) && (manVals[0] == 0)) {
 				Robot.table.putString("FIRE", "F");
@@ -134,8 +129,12 @@ public class Vision {
 		}
 	}
 
-	public static double getSpeed() {
-		return math.SpeedCalc(distance);
+	public double[] getRPMS(double[] currentRPM, double currentPWR) {
+		return math.RPMCalc(this.getDistance(), currentRPM, currentPWR);
+	}
+	
+	public double getSpeed() {
+		return math.SpeedCalc(this.getDistance());
 	}
 
 	public double getDistance() {
@@ -152,5 +151,9 @@ public class Vision {
 
 	public double getForwardBackward() {
 		return manVals[1];
+	}
+	
+	public boolean withIn(double num, double lower, double upper) {
+		return math.withIn(num, lower, upper);
 	}
 }

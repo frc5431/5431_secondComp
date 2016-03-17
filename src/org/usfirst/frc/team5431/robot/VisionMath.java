@@ -35,11 +35,9 @@ public class VisionMath {
 		return ((44.1401) * Math.pow(1.0068, pixelsFromTop)); //THE NEW BOT (SHOULD BE VERY CLOSE)
 	}
 	
-	/*
-	public double PowerCalc(double distanceFromTower) {
+	public double SpeedCalc(double distanceFromTower) {
 		return Math.pow((10.9685 * distanceFromTower), -0.5264);//((3.4028) - (0.5551 * Math.log(distanceFromTower))) + override;
-		//1.454
-	}*/
+	}
 	
 	/**
 	 * Checks the distance of a location from the center of the camera
@@ -51,30 +49,21 @@ public class VisionMath {
 		return current - half;
 	}
 	
-	public double[] RPMCalc(double distanceCalc, double[] currentRPM, double[] currentPWR) {
-		double[] rpms = { 0, 0 };
-		double[] speeds = { 0, 0};
-		double moveMent = 0.001;
-		
-		
-		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY
-		rpms[1] = rpms[0] + 200;
+	public double[] RPMCalc(double distanceCalc, double[] currentRPM, double currentPWR) {
+		double[] rpms = { 0, 0 }; //Future RPM needed 
+		double[] speeds = { 0, 0, 0, 0 }; //Future speed to adjust
+		double moveMentLeft = 0.000238; //Amount of difference per RPM
+		double moveMentRight = 0.000227; //Amount of difference per RPM
 		
 		//LEFT-SIDE
-		if(currentRPM[0] < rpms[0]) {
-			speeds[0] = (rpms[0] - currentRPM[0]) * moveMent;
-		} else if(currentRPM[0] > rpms[0]) {
-			
-		} else {
-			
-		}
+		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY (DISTANCE-RPM (NEEDED))
+		speeds[3] = ((rpms[0] - currentRPM[0]) * moveMentLeft);
+		speeds[0] = currentPWR + speeds[3];
 		
-		if(current[1] < rpms[1]) {
-			
-		}
-		
-		
-		return rpms;		
+		rpms[1] = rpms[0] + 200;
+		speeds[4] = ((rpms[1] - currentRPM[1]) * moveMentRight);
+		speeds[1] = currentPWR + speeds[4];
+		return speeds;
 	}
 	
 	double largest = 0; //Don't mess

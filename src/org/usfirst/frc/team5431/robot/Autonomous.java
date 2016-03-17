@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
-import org.usfirst.frc.team5431.robot.driveBase;
+import org.usfirst.frc.team5431.robot.Robot.AutoTask;
+
 /**
  * Class for Autonomous commands. Uses switch-cases in order to acheive multi-threading without
  * creating multiple threads. Also much faster compared to multi-threading and takes less space.
@@ -24,7 +25,18 @@ public class Autonomous {
 	 * <li>driveForward()</li>
 	 * <li>autoAim()</li>
 	 */
-	public void updateStates(){
+	public void updateStates(AutoTask currentAuto){
+		
+    	switch(currentAuto) {
+    	case AutoShoot:
+        //Put custom auto code here   
+            break;
+    	case StandStill:
+    	default:
+    	//Put default auto code here
+            break;
+    	}
+		
 		driveForwardState = SwitchCase.driveForward(driveForwardState);
 		autoAIMState = SwitchCase.autoAim(autoAIMState);
 	}

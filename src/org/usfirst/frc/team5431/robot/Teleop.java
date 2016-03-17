@@ -9,23 +9,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class Teleop {
-	
-	private static double constFlyWheelSpeed = .8;
-	private int prevFlywheel = 0;
-	private int prevIntakeIn = 0;
-	private int prevIntakeOut = 0;
-	private int currentShootState = 0;
-	private int currentAutoAimState = 0;
-	private boolean ballIn = false;
-	private boolean overrideLimit = false;
-	
-	/**
-	 * Teleop constructor for the Teleop class. Other than being a constructor, 
-	 * this does nothing special.
-	 */
-	public Teleop(){
-		//Doop-de do. A lot of stuff to do here, no?
-	}
+	private static int prevFlywheel = 0;
+	private static int prevIntakeIn = 0;
+	private static int prevIntakeOut = 0;
+	private static int currentShootState = 0;
+	private static int currentAutoAimState = 0;
+	private static final double[] offState = {0.0, 0.0};
+	private static boolean ballIn = false;
 	
 	/**
 	 * Update function for the Teleop() class. Should be called in teleopPeriodic().
@@ -33,14 +23,17 @@ public class Teleop {
 	 */
 	public void Update(OI input){
 		//
-		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875);
+		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875); //Even out values to become 0.875
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
-			if(Robot.flywheels.getFlywheelSpeed() > 0.0)
-				Robot.flywheels.setFlywheelSpeed(0.0);
-			else
-				Robot.flywheels.setFlywheelSpeed(Robot.table.getNumber("OVERDRIVE", 0)+0.0);				
+			if(Robot.flywheels.getFlywheelSpeed() > 0.0) {
+				Robot.flywheels.setFlywheelSpeed(offState);
+			} else {
+				double getOver = Robot.table.getNumber("OVERDRIVE", 0);
+				double woawvers[] = {getOver, getOver};
+				Robot.flywheels.setFlywheelSpeed(woawvers);
+			}
 		}
 		prevFlywheel = (input.joystickButton2 ? 1:0);
 		/*
@@ -52,8 +45,8 @@ public class Teleop {
 			Robot.flywheels.setIntakeSpeed(0.0);
 			*/
 		
-		final boolean intakeon = input.xbox.getRawAxis(3)>0.2;
-		final boolean intakereverse = input.xbox.getRawAxis(2)>0.2;
+		final boolean intakeon = (input.xbox.getRawAxis(3)) > 0.3; // if passed 1/3 move on
+		final boolean intakereverse = (input.xbox.getRawAxis(2)) > 0.3;
 		
 		if((intakereverse ? 1:0) > prevIntakeOut){
 			if(Robot.flywheels.getIntakeSpeed() < 0.0)
@@ -69,8 +62,7 @@ public class Teleop {
 				SmartDashboard.putNumber("Bug", 1.345);
 				Robot.flywheels.setIntakeSpeed(0);
 				ballIn = true;
-			}
-			else{
+			} else{
 				SmartDashboard.putNumber("Bug", 5.431);
 				ballIn = false;
 			}
@@ -87,13 +79,6 @@ public class Teleop {
 		*/
 		SmartDashboard.putNumber("Bug", 1.280000000006);
 		if((intakeon ? 1:0) > prevIntakeIn){
-			/*
-			if(Robot.flywheels.intakeLimit.get()){
-				overrideLimit = true;
-			}
-			else
-				overrideLimit = false;
-				*/
 			SmartDashboard.putNumber("Bug", 3.14);
 			SmartDashboard.putNumber("Intake speed", Robot.flywheels.getIntakeSpeed());
 			if(Robot.flywheels.getIntakeSpeed() != 0.0)
@@ -103,18 +88,16 @@ public class Teleop {
 			//Intake out
 		}
 		prevIntakeIn = (intakeon ? 1:0);
-		if(input.xboxYVal)
-			Robot.flywheels.climb();
-		if(input.joystickTriggerVal && currentAutoAimState == 0){
-			currentShootState = 1;
-		}
-		if(input.joystickButton4 && currentShootState == 0){
-			currentAutoAimState = 1;
-		}
+		
+		if(input.xboxYVal) Robot.flywheels.climb(); //Climb the tower
+		if(input.joystickTriggerVal && currentAutoAimState == 0) currentShootState = 1;
+		if(input.joystickButton4 && currentShootState == 0) currentAutoAimState = 1;
+		
 		SmartDashboard.putBoolean("intakeon", intakeon);
 		SmartDashboard.putBoolean("intakeReverse", intakereverse);
 		SmartDashboard.putNumber("currentShootState", currentShootState);
 		SmartDashboard.putNumber("currentAutoAimState", currentAutoAimState);
+		
 		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);
 		//currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
 		currentShootState = SwitchCase.shoot(currentShootState, 0.0);

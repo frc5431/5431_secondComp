@@ -1,9 +1,7 @@
 package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
@@ -63,27 +61,10 @@ public class Shooter {
 		return returnVals;
 	}
 	
-	private static boolean intendedRPM(){
-		return false;
-	}
-	
-	private static void checkRPM(double volts, double[] actual){
-		if(rpmdelay>0){
-			rpmdelay--;
-			return;
-		}
-		//if()
-	}
-	
-	public void setFlywheelSpeed(double speed){
-		rightFW.set(speed);
-		leftFW.set(speed);
-		final boolean running = speed>0;
-		if(running){
-			rpmbooster=0;
-			rpmdelay = 3000;
-		}
-		Robot.table.putBoolean("turret", running);
+	public void setFlywheelSpeed(double[] speeds){
+		rightFW.set(speeds[0]);
+		leftFW.set(speeds[1]);
+		Robot.table.putBoolean("turret", ((speeds[0] > 0.1)|| (speeds[1] > 0.1)));
 	}
 	
 	public double getFlywheelSpeed(){

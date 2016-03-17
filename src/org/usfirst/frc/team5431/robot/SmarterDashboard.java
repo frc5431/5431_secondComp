@@ -10,26 +10,25 @@ public class SmarterDashboard {
 
 	private static ArrayList<String> debug = new ArrayList<String>();
 
+	/*
 	private static String constructDebug() {
 		final StringBuilder b = new StringBuilder();
-		for (String s : debug) {
-			b.append(s).append("\n");
-		}
+		for (String s : debug) b.append(s).append("\n");
 		return b.toString();
-	}
+	}*/
 
 	private static void init() {
 		init = true;
 		table = NetworkTable.getTable("5431");
 	}
 
+	/*
 	private static void periodic() {
 		table.putString("DEBUG", constructDebug());
-	}
+	}*/
 
 	private static void checkInit() {
-		if (!init)
-			init();
+		if (!init) init();
 	}
 
 	public static void put(String key, Object o) {

@@ -3,9 +3,9 @@ package org.usfirst.frc.team5431.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwitchCase {
-	private static double[] encodersDistance = {0};
-	private double[] encodersRPM = {0};
-	private static double driveForwardDistance = driveForwardDistance = driveBase.wheelDiameter * Math.PI * 10;//10 is distance in inches - must change;
+	//private static double[] encodersDistance = {0};
+	//private double[] encodersRPM = {0};
+	//private static double driveForwardDistance = driveForwardDistance = driveBase.wheelDiameter * Math.PI * 10;//10 is distance in inches - must change;
 	private static Vision cameraVision = new Vision();
 	
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
@@ -36,10 +36,10 @@ public class SwitchCase {
 				state = 2;
 				break;
 			case 2:
-				encodersDistance = Robot.drivebase.getEncDistance();
-				if(encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance){
+				//encodersDistance = Robot.drivebase.getEncDistance();
+				/*if(encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance){
 					Robot.drivebase.drive(0.0, 0.0);
-				}
+				}*/
 				break;
 			case 3:
 				state = 0;
@@ -92,6 +92,8 @@ public class SwitchCase {
 				}
 				else if(Vision.manVals[0] == 666){
 					SmartDashboard.putString("ERROR", "Vision failed");
+					Robot.drivebase.drive(0, 0);
+					return state; //Why go any further
 				}
 				else
 					state = abortAutoAim; //manVals[0] should only be 0-2. Nothing else. Somethign is wrong.
@@ -130,21 +132,28 @@ public class SwitchCase {
 	}
 	
 	public static int shoot(int state, double shootSpeed){//shootSpeed is temp since there is no camera at the time of coding
+		double toSetSpeed = shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0);
+		double[] off = {0, 0};
+		cameraVision.Update();
+		
 		switch(state){
 		default:
 				break;
 			case 0:
 				break;
 			case 1:
-				//cameraVision.Update();
 				Robot.table.putBoolean("AUTO", true);
-				Robot.flywheels.setFlywheelSpeed(shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0));
+				double[] speeds = {toSetSpeed, toSetSpeed};
+				Robot.flywheels.setFlywheelSpeed(speeds);
 				autoAimTimer = System.currentTimeMillis() + 2500;
 				state = 2;
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
 				SmartDashboard.putNumber("shootBug2", autoAimTimer);
-				if(System.currentTimeMillis() >= autoAimTimer){
+				//if(System.currentTimeMillis() >= autoAimTimer){
+				double[] curRPM = Robot.flywheels.getRPM();
+				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
+				if(cameraVision.withIn(speedsTwo[3], -0.08, 0.08) && cameraVision.withIn(speedsTwo[4], -0.08, 0.08)) {
 					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 					Robot.flywheels.setIntakeSpeed(1);
 					autoAimIntakeTimer = System.currentTimeMillis() + 750;
@@ -158,7 +167,7 @@ public class SwitchCase {
 				if(System.currentTimeMillis() >= autoAimIntakeTimer){
 					Robot.table.putBoolean("AUTO", false);
 					Robot.flywheels.setIntakeSpeed(0);
-					Robot.flywheels.setFlywheelSpeed(0);
+					Robot.flywheels.setFlywheelSpeed(off);
 					state = 4;
 				}
 				else
@@ -167,13 +176,6 @@ public class SwitchCase {
 			case 4:			//This is to allow remoteStates to know when program is done
 				state = 0;
 				break;
-			case 5://We are doing auto-adjust speed
-				cameraVision.Update();
-				Robot.table.putBoolean("AUTO", true);
-				Robot.flywheels.setFlywheelSpeed(Vision.getSpeed());
-				state = 6;
-			case 6:
-				
 				
 		}
 		return state;

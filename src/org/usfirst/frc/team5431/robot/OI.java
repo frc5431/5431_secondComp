@@ -9,30 +9,38 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  */
 public class OI {
-	Joystick xbox, joystick;
-	public double xboxRightJoystickVal = 0;
-	public double xboxLeftJoystickVal = 0;
-	public double joystickPotentiometerVal = 0.0;
-	public boolean xboxAVal = false;
-	public boolean xboxBVal = false;
-	public boolean xboxXVal = false;
-	public boolean xboxYVal = false;
-	public boolean joystickTriggerVal = false;
-	public boolean joystickButton2 = false;
-	public boolean joystickButton3 = false;
-	public boolean joystickButton4 = false;
+	Joystick xbox;
+	Joystick joystick;
+	public double 
+			xboxRightJoystickVal = 0,
+			xboxLeftJoystickVal = 0,
+			joystickPotentiometerVal = 0.0;
 	
-	private int xboxRightJoy = 1;
-	private int xboxLeftJoy = 5;
-	private int joystickPotentiometer = 2;
-	private int xboxButtonA = 1;
-	private int xboxButtonB = 2;
-	private int xboxButtonX = 3;
-	private int xboxButtonY = 4;
-	private int joystickTrigger = 1;
-	private int joystickButtonLabeled2 = 2;
-	private int joystickButtonLabeled3 = 3;
-	private int joystickButtonLabeled4 = 4;
+	public boolean
+			//Xbox joystick
+			xboxAVal = false,
+			xboxBVal = false,
+			xboxXVal = false,
+			xboxYVal = false,
+			//Gun joystick
+			joystickTriggerVal = false,
+			joystickButton2 = false,
+			joystickButton3 = false,
+			joystickButton4 = false;
+	
+	private static int 
+			xboxRightJoy = 1,
+			xboxLeftJoy = 5,
+			xboxButtonA = 1,
+			xboxButtonB = 2,
+			xboxButtonX = 3,
+			xboxButtonY = 4,
+			//Gun joystick
+			joystickPotentiometer = 2,
+			joystickTrigger = 1,
+			joystickButtonLabeled2 = 2,
+			joystickButtonLabeled3 = 3,
+			joystickButtonLabeled4 = 4;
 	
 	public OI(int xboxPort, int joystickPort){
 		xbox = new Joystick(xboxPort);
@@ -40,6 +48,7 @@ public class OI {
 	}
 	
 	public void updateVals(){
+		//Xbox joystick
 		xboxRightJoystickVal = xbox.getRawAxis(xboxRightJoy);
 		xboxLeftJoystickVal = xbox.getRawAxis(xboxLeftJoy);
 		joystickPotentiometerVal = joystick.getRawAxis(joystickPotentiometer);
@@ -47,6 +56,8 @@ public class OI {
 		xboxBVal = xbox.getRawButton(xboxButtonB);
 		xboxXVal = xbox.getRawButton(xboxButtonX);
 		xboxYVal = xbox.getRawButton(xboxButtonY);
+		
+		//Shooting joystick
 		joystickTriggerVal = joystick.getRawButton(joystickTrigger);
 		joystickButton2 = joystick.getRawButton(joystickButtonLabeled2);
 		joystickButton3 = joystick.getRawButton(joystickButtonLabeled3);
