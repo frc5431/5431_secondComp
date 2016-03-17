@@ -157,7 +157,7 @@ public class SwitchCase {
 				
 				double[] curRPM = Robot.flywheels.getRPM();
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
-				if(cameraVision.withIn(speedsTwo[2], -0.3, 0.3) && cameraVision.withIn(speedsTwo[3], -0.3, 0.3)) {
+				if(cameraVision.withIn(speedsTwo[2], -300, 300) || cameraVision.withIn(speedsTwo[3], -300, 300)) {
 				//if(System.currentTimeMillis() >= autoAimTimer){
 					SmartDashboard.putString("LEFTRIGHT", String.valueOf(speedsTwo[2]) + ":" + String.valueOf(speedsTwo[3]));
 					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
