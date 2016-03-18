@@ -100,4 +100,10 @@ public class driveBase {
 		returnVals[1] = rightBaseEncoder.getDistance();
 		return returnVals;
 	}
+	
+	public void resetDrive() {
+		leftBaseEncoder.reset();
+		rightBaseEncoder.reset();
+	}
+	
 }

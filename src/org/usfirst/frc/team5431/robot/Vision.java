@@ -120,8 +120,7 @@ public class Vision {
 				} else if (manVals[0] == 2) {
 					Robot.table.putString("FIRE", "TR");
 					// Robot.led.turnRight(255, 135, 0, 65);
-				}
-				
+				}	
 			}
 		} else {
 			Robot.table.putString("FIRE", "NA");
