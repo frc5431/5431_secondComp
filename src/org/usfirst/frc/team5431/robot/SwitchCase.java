@@ -82,8 +82,10 @@ public class SwitchCase {
 				//FIX.
 				//FIX.
 				//You get it now, right?
-				if(Vision.manVals[0] == 0)
-					state = 4;
+				if(Vision.manVals[0] == 0) {
+					state = 4;//Change when you want f/backward
+					autoAimRemoteState = 1;
+				}
 				else if(Vision.manVals[0] == 1){
 					Robot.drivebase.drive(-0.5,  0.5);
 					state = 2;
@@ -124,7 +126,7 @@ public class SwitchCase {
 				break;
 			case 4:
 				SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
-				autoAimRemoteState = shoot(autoAimRemoteState, .8);//Remember to remove .8 with Vision.getSpeed() once camera is installed
+				autoAimRemoteState = shoot(autoAimRemoteState, 0.5);//Remember to remove .8 with Vision.getSpeed() once camera is installed
 				if(autoAimRemoteState == 4)
 					state = 0;
 			case abortAutoAim:
