@@ -97,7 +97,7 @@ public class SwitchCase {
 					Robot.drivebase.drive(0.5,  -0.5);
 					state = 2;
 				}
-				else if(Vision.manVals[0] == 666){
+				else if(Vision.manVals[0] == 5 || Vision.manVals[1] == 5){
 					SmartDashboard.putString("ERROR", "Vision failed");
 					Robot.drivebase.drive(0, 0);
 					return state; //Why go any further

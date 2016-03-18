@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
     static SendableChooser auton_select;
 	public static NetworkTable table;
     
-	enum AutoTask{ AutoShoot, StandStill};
+	enum AutoTask{ TouchOuterWork, Lowbar, AutoShoot, StandStill};
 	static AutoTask currentAuto;
 	
 	public static final boolean brakeMode = false;
@@ -63,6 +63,7 @@ public class Robot extends IterativeRobot {
     	table.putBoolean("AUTO", true);
     	currentAuto = (AutoTask) auton_select.getSelected();
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
+ 		drivebase.resetDrive();
     }
     
     public void disabledPeriodic(){
