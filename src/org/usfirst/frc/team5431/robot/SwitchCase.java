@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,6 +14,8 @@ public class SwitchCase {
 	private static long autoAimTimer = 0;
 	private static long autoAimIntakeTimer = 0;
 	private static long autoAimManualTimer = 0;
+	private static long extendClimberTimer = 0;
+	private static long raiseClimberTimer = 0;
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
 	public SwitchCase() {
@@ -230,6 +233,73 @@ public class SwitchCase {
 			Robot.flywheels.setIntakeSpeed(0);
 			state = 0;
 			break;
+		}
+		return state;
+	}
+	
+	public static int climb(int state){
+		switch(state){
+		default:
+			break;
+		case 0:
+			break;
+		case 1:
+			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kForward);
+			extendClimberTimer = System.currentTimeMillis() + 2000;
+			state = 2;
+			break;
+		case 2:
+			if(System.currentTimeMillis() >= extendClimberTimer){
+				state = 3;
+			}
+		case 3:
+			raiseClimberTimer = System.currentTimeMillis() + 2000;
+			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kForward);
+			state = 4;
+		case 4:
+			if(System.currentTimeMillis() >= raiseClimberTimer){
+				state = 5;
+			}
+		case 5:
+			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
+			extendClimberTimer = System.currentTimeMillis() + 500;
+			state = 6;
+		case 6:
+			if(System.currentTimeMillis() >= extendClimberTimer){
+				state = 7;
+			}
+		case 7:	//Done, do winch now.
+			state = 0;
+			
+		//For reverse-climbing. Make sure to update the delays for BOTH climbing/letting go
+		case 8:
+			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kForward);
+			extendClimberTimer = System.currentTimeMillis() + 500;
+			state = 9;
+		case 9:
+			if(System.currentTimeMillis() >= extendClimberTimer){
+				state = 10;
+			}
+		case 10:
+			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kReverse);
+			raiseClimberTimer = System.currentTimeMillis() + 2000;
+			state = 11;
+		case 11:
+			if(System.currentTimeMillis() >= raiseClimberTimer){
+				state = 12;
+			}
+		case 12:
+			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
+			extendClimberTimer = System.currentTimeMillis() + 2000;
+			state = 13;
+		case 13:
+			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
+			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kReverse);
+			state = 14;
+		case 14:
+			state = 0;
+		case -1:
+			state = 13;
 		}
 		return state;
 	}

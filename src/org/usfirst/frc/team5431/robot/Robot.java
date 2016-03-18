@@ -16,6 +16,7 @@ public class Robot extends IterativeRobot {
     SendableChooser chooser;
     static driveBase drivebase;
     static Shooter flywheels;
+    static ClimbChop pneumatics;
     static Teleop teleop;
     static Autonomous auton;
     static OI oiInput;

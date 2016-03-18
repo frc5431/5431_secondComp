@@ -15,6 +15,7 @@ public class Teleop {
 	private static int prevIntakeShoot = 0;
 	private static int currentShootState = 0;
 	private static int currentAutoAimState = 0;
+	private static int currentClimbState = 0;
 	private static int currentShootManualState = 0;
 	private static final double[] offState = {0.0, 0.0};
 	private static boolean ballIn = false;
@@ -91,7 +92,7 @@ public class Teleop {
 		}
 		prevIntakeIn = (intakeon ? 1:0);
 		
-		if(input.xboxYVal) Robot.flywheels.climb(); //Climb the tower
+		//if(input.xboxYVal) Robot.flywheels.climb(); //Climb the tower
 		if(input.joystickTriggerVal && currentAutoAimState == 0) currentShootState = 1;
 		if(input.joystickButton4 && currentShootState == 0) currentAutoAimState = 1;
 		if(input.joystickButton5){
@@ -104,6 +105,12 @@ public class Teleop {
 			currentShootManualState = 1;
 		}
 		
+		if(input.joystickButton6 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
+			currentClimbState = 1;
+		}
+		else if(input.joystickButton7 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState > 0 && currentClimbState < 8){
+			currentClimbState = 8;
+		}
 		SmartDashboard.putBoolean("intakeon", intakeon);
 		SmartDashboard.putBoolean("intakeReverse", intakereverse);
 		SmartDashboard.putNumber("currentShootState", currentShootState);
@@ -113,5 +120,6 @@ public class Teleop {
 		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
 		//currentShootState = SwitchCase.shoot(currentShootState, 0.0);
 		currentShootManualState = SwitchCase.shootManual(currentShootManualState);
+		currentClimbState = SwitchCase.climb(currentClimbState);
 	}
 }

@@ -16,8 +16,12 @@ public class RobotMap {
 		leftFlyWheel = 8,
 		intake = 5,
 		winch = 9,
-		firstSolenoid = 1,
-		secondSolenoid = 2,
+		climberExtend1 = 1,
+		climberExtend2 = 2,
+		climberRaise1 = 3,
+		climberRaise2 = 4,
+		choppers1=5,
+		choppers2 = 6,
 		
 		rightBaseEnc1 = 0,	//Mapping for encoders' DIO ports
 		rightBaseEnc2 = 1,

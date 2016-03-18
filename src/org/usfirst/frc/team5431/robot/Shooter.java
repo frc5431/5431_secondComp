@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
  * @author Usaid Malik
  */
 public class Shooter {
-	Solenoid initialClimbSolenoid;
-	Solenoid secondClimbSolenoid;
 	DigitalInput intakeLimit;
 	CANTalon rightFW, leftFW, intakeMotor, winchMotor;
 	static int rpmdelay=0;
@@ -28,10 +26,6 @@ public class Shooter {
 	 */
 	public Shooter(){
 		intakeLimit = new DigitalInput(RobotMap.intakeLim);
-		initialClimbSolenoid = new Solenoid(RobotMap.firstSolenoid);
-		secondClimbSolenoid = new Solenoid(RobotMap.secondSolenoid);
-		initialClimbSolenoid.set(false);
-		secondClimbSolenoid.set(false);
 		rightFW = new CANTalon(RobotMap.rightFlyWheel);
 		leftFW = new CANTalon(RobotMap.leftFlyWheel);
 		intakeMotor = new CANTalon(RobotMap.intake);
@@ -91,15 +85,5 @@ public class Shooter {
 		return intakeMotor.get();
 	}
 	
-	public void climb(){
-		initialClimbSolenoid.set(true);
-		Timer.delay(3);
-		secondClimbSolenoid.set(true);
-		Timer.delay(3);
-		secondClimbSolenoid.set(false);
-		winchMotor.set(1.0);
-		Timer.delay(5);
-		winchMotor.set(0.0);
-	}
 }
                                                                                                              
