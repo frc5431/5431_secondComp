@@ -78,6 +78,9 @@ public class Vision {
 			Robot.table.putNumber("HOLE-DISTANCE", distances[toShoot]);
 			Robot.table.putNumber("HOLE-CENTER", tempCenter);
 			Robot.table.putNumber("HOLE-SOLITIY", holeSolids[toShoot]);
+			area = areas[toShoot];
+			distance = distances[toShoot];
+			
 
 			manVals[1] = (math.withIn(distances[toShoot], VisionMath.minDistance, VisionMath.maxDistance)) ? 0
 					: (distances[toShoot] < VisionMath.minDistance) ? 1 : 2; // Get
@@ -130,11 +133,12 @@ public class Vision {
 	}
 
 	public double[] getRPMS(double[] currentRPM, double currentPWR) {
-		return math.RPMCalc(this.getDistance(), currentRPM, currentPWR);
+		SmartDashboard.putNumber("Current DISTANCE:", getDistance());
+		return math.RPMCalc(getDistance(), currentRPM, currentPWR);
 	}
 	
 	public double getSpeed() {
-		return math.SpeedCalc(this.getDistance());
+		return math.SpeedCalc(getDistance());
 	}
 
 	public double getDistance() {

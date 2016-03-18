@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwitchCase {
@@ -140,6 +141,7 @@ public class SwitchCase {
 		double toSetSpeed = shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0);
 		cameraVision.Update();
 		SmartDashboard.putNumber("SysTime", System.currentTimeMillis());
+		double subtractRate = 0;
 		switch(state){
 		default:
 				break;
@@ -157,14 +159,25 @@ public class SwitchCase {
 				
 				double[] curRPM = Robot.flywheels.getRPM();
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
-				if(cameraVision.withIn(speedsTwo[2], -300, 300) || cameraVision.withIn(speedsTwo[3], -300, 300)) {
+				SmartDashboard.putString("LEFTRIGHT", String.valueOf(speedsTwo[2]) + ":" + String.valueOf(speedsTwo[3]));
+				SmartDashboard.putString("NEEDEDLEFTRIGHT", String.valueOf(speedsTwo[4]) + ":" + String.valueOf(speedsTwo[5]));
+				double leftPower = Robot.flywheels.getLeftPower();
+				double rightPower = Robot.flywheels.getRightPower();
+				double newPower[] = {leftPower + (speedsTwo[0] /2), rightPower + (speedsTwo[1] /2)};
+				Robot.flywheels.setFlywheelSpeed(newPower);
+				if(cameraVision.withIn(speedsTwo[2], -200, 200) && cameraVision.withIn(speedsTwo[3], -200, 200)) {
+					
+					/*if(passedTimes < 4) {
+						Timer.delay(0.1);
+						passedTimes += 1;
+					} else {*/
 				//if(System.currentTimeMillis() >= autoAimTimer){
-					SmartDashboard.putString("LEFTRIGHT", String.valueOf(speedsTwo[2]) + ":" + String.valueOf(speedsTwo[3]));
-					SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
-					Robot.flywheels.setIntakeSpeed(1);
-					autoAimIntakeTimer = System.currentTimeMillis() + 750;
-					SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
-					state = 3;
+						SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
+						Robot.flywheels.setIntakeSpeed(1);
+						autoAimIntakeTimer = System.currentTimeMillis() + 750;
+						SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
+						state = 3;
+					//}
 				}
 				else
 					state = 2;

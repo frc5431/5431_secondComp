@@ -51,18 +51,22 @@ public class VisionMath {
 	
 	public double[] RPMCalc(double distanceCalc, double[] currentRPM, double currentPWR) {
 		double[] rpms = { 0, 0 }; //Future RPM needed 
-		double[] speeds = { 0, 0, 0, 0 }; //Future speed to adjust
-		double moveMentLeft = 0.000238; //Amount of difference per RPM
-		double moveMentRight = 0.000227; //Amount of difference per RPM
+		double[] speeds = { 0, 0, 0, 0, 0, 0 }; //Future speed to adjust
+		double moveMentLeft = 0.0001738; //Amount of difference per RPM
+		double moveMentRight = 0.0001727; //Amount of difference per RPM
 		
 		//LEFT-SIDE
 		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY (DISTANCE-RPM (NEEDED))
 		speeds[2] = ((rpms[0] - currentRPM[0]));
-		speeds[0] = currentPWR + (speeds[2] * moveMentLeft);
+		speeds[0] = (speeds[2] * moveMentLeft);
 		
 		rpms[1] = rpms[0] + 200;
 		speeds[3] = ((rpms[1] - currentRPM[1]));
-		speeds[1] = currentPWR + (speeds[3] * moveMentRight);
+		speeds[1] = (speeds[3] * moveMentRight);
+		
+		speeds[4] = rpms[0];
+		speeds[5] = rpms[1];
+		
 		return speeds;
 	}
 	

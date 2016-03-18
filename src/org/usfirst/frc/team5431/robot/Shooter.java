@@ -17,6 +17,7 @@ public class Shooter {
 	CANTalon rightFW, leftFW, intakeMotor, winchMotor;
 	static int rpmdelay=0;
 	static double rpmbooster=0;
+	public static final double[] power = { 0, 0};
 	
 	/**
 	 * Constructor for the Shooter() class. Assigns motors, encoders, and sets settings for them.
@@ -64,12 +65,23 @@ public class Shooter {
 	public void setFlywheelSpeed(double[] speeds){
 		rightFW.set(speeds[0]);
 		leftFW.set(speeds[1]);
+		power[0] = speeds[0];
+		power[1] = speeds[1];
 		Robot.table.putBoolean("turret", ((speeds[0] > 0.1)|| (speeds[1] > 0.1)));
 	}
 	
 	public double getFlywheelSpeed(){
 		return leftFW.get();
 	}
+	
+	public double getLeftPower() {
+		return power[0];
+	}
+	
+	public double getRightPower() {
+		return power[1];
+	}
+	
 	public void setIntakeSpeed(double speed){
 		intakeMotor.set(speed);
 		Robot.table.putBoolean("intake", speed!=0);
