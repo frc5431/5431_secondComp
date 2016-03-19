@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -112,13 +113,21 @@ public class Teleop {
 		if(input.joystickButton6 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
 			currentClimbState = 1;
 		}
-		else if(input.joystickButton7 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState > 0 && currentClimbState < 8){
+		else if(input.joystickButton7 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
 			currentClimbState = 8;
+		}
+		
+		if(input.joystickButton10){
+			Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kReverse);
+		}
+		else if(input.joystickButton11){
+			Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kForward);
 		}
 		SmartDashboard.putBoolean("intakeon", intakeon);
 		SmartDashboard.putBoolean("intakeReverse", intakereverse);
 		SmartDashboard.putNumber("currentShootState", currentShootState);
 		SmartDashboard.putNumber("currentAutoAimState", currentAutoAimState);
+		SmartDashboard.putNumber("currentClimbState", currentClimbState);
 		
 		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);
 		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);

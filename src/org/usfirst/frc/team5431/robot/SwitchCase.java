@@ -263,54 +263,67 @@ public class SwitchCase {
 			if(System.currentTimeMillis() >= extendClimberTimer){
 				state = 3;
 			}
+			break;
 		case 3:
 			raiseClimberTimer = System.currentTimeMillis() + 2000;
 			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kForward);
 			state = 4;
+			break;
 		case 4:
 			if(System.currentTimeMillis() >= raiseClimberTimer){
 				state = 5;
 			}
+			break;
 		case 5:
 			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
 			extendClimberTimer = System.currentTimeMillis() + 500;
 			state = 6;
+			break;
 		case 6:
 			if(System.currentTimeMillis() >= extendClimberTimer){
 				state = 7;
 			}
+			break;
 		case 7:	//Done, do winch now.
 			state = 0;
-			
+			break;
 		//For reverse-climbing. Make sure to update the delays for BOTH climbing/letting go
 		case 8:
 			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kForward);
 			extendClimberTimer = System.currentTimeMillis() + 500;
 			state = 9;
+			break;
 		case 9:
 			if(System.currentTimeMillis() >= extendClimberTimer){
 				state = 10;
 			}
+			break;
 		case 10:
 			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kReverse);
 			raiseClimberTimer = System.currentTimeMillis() + 2000;
 			state = 11;
+			break;
 		case 11:
 			if(System.currentTimeMillis() >= raiseClimberTimer){
 				state = 12;
 			}
+			break;
 		case 12:
 			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
 			extendClimberTimer = System.currentTimeMillis() + 2000;
 			state = 13;
+			break;
 		case 13:
 			Robot.pneumatics.extendClimber.set(DoubleSolenoid.Value.kReverse);
 			Robot.pneumatics.raiseClimber.set(DoubleSolenoid.Value.kReverse);
 			state = 14;
+			break;
 		case 14:
 			state = 0;
+			break;
 		case -1:
 			state = 13;
+			break;
 		}
 		return state;
 	}
