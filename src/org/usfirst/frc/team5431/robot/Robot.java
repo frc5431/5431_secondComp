@@ -46,6 +46,7 @@ public class Robot extends IterativeRobot {
         teleop = new Teleop();
         auton = new Autonomous();
         oiInput = new OI(0, 1);
+        pneumatics = new ClimbChop();
     }
     
 	/**
