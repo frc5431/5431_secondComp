@@ -36,7 +36,7 @@ public class Vision {
 			math = new VisionMath();
 			grip = new Grip();
 		} catch (Throwable initError) {
-			Robot.table.putString("ERROR", "Error initializing grip");
+			SmarterDashboard.putString("ERROR", "Error initializing grip");
 			SmartDashboard.putString("stringBug", "Error initializing grip");
 		}
 	}
@@ -67,17 +67,17 @@ public class Vision {
 																					// shoot
 																					// at(Method
 																					// below)
-		Robot.table.putNumber("HOLE-NUM", toShoot); // Display to dashboard what
+		SmarterDashboard.putNumber("HOLE-NUM", toShoot); // Display to dashboard what
 													// to shoot at
 		if (toShoot != 666) {// Don't shoot at nothing (THE DEVIL)
 			final double tempCenter = grip.fromCenter(screenHalf, math)[toShoot]; // Temp
 																					// center
 																					// values
 			// Display values to SmartDashboard!
-			Robot.table.putNumber("HOLE-AREA", areas[toShoot]);
-			Robot.table.putNumber("HOLE-DISTANCE", distances[toShoot]);
-			Robot.table.putNumber("HOLE-CENTER", tempCenter);
-			Robot.table.putNumber("HOLE-SOLITIY", holeSolids[toShoot]);
+			SmarterDashboard.putNumber("HOLE-AREA", areas[toShoot]);
+			SmarterDashboard.putNumber("HOLE-DISTANCE", distances[toShoot]);
+			SmarterDashboard.putNumber("HOLE-CENTER", tempCenter);
+			SmarterDashboard.putNumber("HOLE-SOLITIY", holeSolids[toShoot]);
 			area = areas[toShoot];
 			distance = distances[toShoot];
 			
@@ -94,37 +94,37 @@ public class Vision {
 																	// turn the
 																	// turrent
 
-			Robot.table.putNumber("AUTO-AIM-SPEED", getSpeed());
+			SmarterDashboard.putNumber("AUTO-AIM-SPEED", getSpeed());
 
 			if ((manVals[1] == 0) && (manVals[0] == 0)) {
-				Robot.table.putString("FIRE", "F");
-				Robot.table.putString("PULL", "F");
+				SmarterDashboard.putString("FIRE", "F");
+				SmarterDashboard.putString("PULL", "F");
 				// Robot.led.wholeStripRGB(255, 0, 0);
 				manVals[1] = 0;
 				manVals[2] = 0;
 			} else {
-				Robot.table.putString("PULL", "NA");
-				Robot.table.putString("FIRE", "NA");
+				SmarterDashboard.putString("PULL", "NA");
+				SmarterDashboard.putString("FIRE", "NA");
 
 				if (manVals[1] == 1) {
-					Robot.table.putString("PULL", "DB");
+					SmarterDashboard.putString("PULL", "DB");
 					// Robot.led.backwards(0, 0, 255, 60);
 				} else if (manVals[1] == 2) {
-					Robot.table.putString("PULL", "DF");
+					SmarterDashboard.putString("PULL", "DF");
 					// Robot.led.forwards(0, 255, 255, 60);
 				}
 
 				if (manVals[0] == 1) {
-					Robot.table.putString("FIRE", "TL");
+					SmarterDashboard.putString("FIRE", "TL");
 					// Robot.led.turnLeft(255, 135, 0, 65);
 				} else if (manVals[0] == 2) {
-					Robot.table.putString("FIRE", "TR");
+					SmarterDashboard.putString("FIRE", "TR");
 					// Robot.led.turnRight(255, 135, 0, 65);
 				}	
 			}
 		} else {
-			Robot.table.putString("FIRE", "NA");
-			Robot.table.putString("PULL", "NA");
+			SmarterDashboard.putString("FIRE", "NA");
+			SmarterDashboard.putString("PULL", "NA");
 			// Robot.led.wholeStripRGB(120, 140, 120);
 			manVals[0] = 5;
 			manVals[1] = 5;

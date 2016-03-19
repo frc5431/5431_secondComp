@@ -61,7 +61,7 @@ public class Shooter {
 		leftFW.set(speeds[1]);
 		power[0] = speeds[0];
 		power[1] = speeds[1];
-		Robot.table.putBoolean("turret", ((speeds[0] > 0.1)|| (speeds[1] > 0.1)));
+		SmarterDashboard.putBoolean("turret", ((speeds[0] > 0.1)|| (speeds[1] > 0.1)));
 	}
 	
 	public double getFlywheelSpeed(){
@@ -78,8 +78,8 @@ public class Shooter {
 	
 	public void setIntakeSpeed(double speed){
 		intakeMotor.set(speed);
-		Robot.table.putBoolean("intake", speed!=0);
-		Robot.table.putBoolean("INTAKE-REVERSE", speed<0);
+		SmarterDashboard.putBoolean("intake", speed!=0);
+		SmarterDashboard.putBoolean("INTAKE-REVERSE", speed<0);
 	}
 	public double getIntakeSpeed(){
 		return intakeMotor.get();

@@ -3,7 +3,6 @@ package org.usfirst.frc.team5431.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team5431.robot.driveBase;
@@ -21,9 +20,8 @@ public class Robot extends IterativeRobot {
     static Autonomous auton;
     static OI oiInput;
     static SendableChooser auton_select;
-	public static NetworkTable table;
     
-	enum AutoTask{ TouchOuterWork, Lowbar, AutoShoot, StandStill};
+	enum AutoTask{ Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter};
 	static AutoTask currentAuto;
 	
 	public static final boolean brakeMode = false;
@@ -33,13 +31,14 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		table = NetworkTable.getTable("5431");
 		
 		//Autonomous selection
         auton_select = new SendableChooser();
         auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
         auton_select.addObject("StandStill", AutoTask.StandStill);
-        
+        auton_select.addObject("Touch Outer", AutoTask.TouchOuterWork);
+        auton_select.addObject("Cross Outer", AutoTask.CrossOuter);
+        auton_select.addObject("Moat Over", AutoTask.Moat);
         SmartDashboard.putData("Auto choices", auton_select);
         
         drivebase = new driveBase(brakeMode);
@@ -47,7 +46,6 @@ public class Robot extends IterativeRobot {
         teleop = new Teleop();
         auton = new Autonomous();
         oiInput = new OI(0, 1);
-        
     }
     
 	/**
@@ -60,16 +58,17 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
-    	table.putBoolean("AUTO", true);
+    	SmarterDashboard.putBoolean("AUTO", true);
     	currentAuto = (AutoTask) auton_select.getSelected();
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
  		drivebase.resetDrive();
     }
     
     public void disabledPeriodic(){
-    	table.putBoolean("AUTO", false);
-    	table.putBoolean("ENABLED", false);
-    	table.putBoolean("connection", true);
+    	SmarterDashboard.putBoolean("AUTO", false);
+    	SmarterDashboard.putBoolean("ENABLED", false);
+    	SmarterDashboard.putBoolean("connection", true);
+    	SmarterDashboard.periodic();
     	Timer.delay(1); //Sleep a little for little overhead time
     }
 
@@ -78,9 +77,10 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
     	auton.updateStates(currentAuto);
-    	table.putBoolean("connection", true);
-    	table.putBoolean("AUTO", true);
+    	SmarterDashboard.putBoolean("connection", true);
+    	SmarterDashboard.putBoolean("AUTO", true);
     	Timer.delay(0.005); // Wait 50 Hz
+    	SmarterDashboard.periodic();
     }
 
     /**
@@ -92,18 +92,19 @@ public class Robot extends IterativeRobot {
         teleop.Update(oiInput);
         
         //Update connection
-        table.putBoolean("ENABLED", true);
-        table.putBoolean("connection", true);
+        SmarterDashboard.putBoolean("ENABLED", true);
+        SmarterDashboard.putBoolean("connection", true);
         
         //Update RPM for fly wheels
         final double[] rpms = flywheels.getRPM();
-		table.putNumber("FLY-LEFT", rpms[0]);
-		table.putNumber("FLY-RIGHT", rpms[1]);
+		SmarterDashboard.putNumber("FLY-LEFT", rpms[0]);
+		SmarterDashboard.putNumber("FLY-RIGHT", rpms[1]);
 		
 		//Update drivetrain distance
 		final double[] driverpm = drivebase.getEncDistance();
-		table.putNumber("DRIVE-DISTANCE-LEFT", driverpm[0]);
-		table.putNumber("DRIVE-DISTANCE-RIGHT", driverpm[1]);
+		SmarterDashboard.putNumber("DRIVE-DISTANCE-LEFT", driverpm[0]);
+		SmarterDashboard.putNumber("DRIVE-DISTANCE-RIGHT", driverpm[1]);
+    	SmarterDashboard.periodic();
     }
 
     public void testPeriodic() {} //Not used

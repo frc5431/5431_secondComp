@@ -20,8 +20,7 @@ public class Grip {
 		try {
 			grip = NetworkTable.getTable("GRIP/vision");
 		} catch(Throwable gripError) {
-			Robot.table.putString("ERROR", "Couldn't get grip table");
-			SmartDashboard.putString("gripBug", "Can't get grip table");
+			SmarterDashboard.putString("ERROR", "Couldn't get grip table");
 			gripError.printStackTrace();
 		}
 	}

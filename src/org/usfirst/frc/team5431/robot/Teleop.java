@@ -26,14 +26,18 @@ public class Teleop {
 	 */
 	public void Update(OI input){
 		//
-		Robot.table.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875); //Even out values to become 0.875
+		SmarterDashboard.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875); //Even out values to become 0.875
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
+		if(input.xboxLeftJoystickVal != 0)
+			currentAutoAimState = 0;
+		if(input.xboxRightJoystickVal != 0)
+			currentAutoAimState = 0;
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
 			if(Robot.flywheels.getFlywheelSpeed() > 0.0) {
 				Robot.flywheels.setFlywheelSpeed(offState);
 			} else {
-				double getOver = Robot.table.getNumber("OVERDRIVE", 0);
+				double getOver = SmarterDashboard.getNumber("OVERDRIVE", 0);
 				double woawvers[] = {getOver, getOver};
 				Robot.flywheels.setFlywheelSpeed(woawvers);
 			}
@@ -70,7 +74,7 @@ public class Teleop {
 				ballIn = false;
 			}
 		}
-		Robot.table.putBoolean("boulder", ballIn);
+		SmarterDashboard.putBoolean("boulder", ballIn);
 		/*//Commented due to conflict between driver/shooter control over intake 
 		if(ballIn){
 			SmartDashboard.putNumber("Bug", -1);

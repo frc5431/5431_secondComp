@@ -13,9 +13,9 @@ public class VisionMath {
 	public static final double 
 			screenHalf = 160,
 			minDistance = 90,
-			maxDistance = 180,
-			leftTrig = -15,
-			rightTrig = 15;
+			maxDistance = 190,
+			leftTrig = 1,
+			rightTrig = 30;
 	
 	private static final double
 			maxArea = 200,
@@ -60,7 +60,7 @@ public class VisionMath {
 		speeds[2] = ((rpms[0] - currentRPM[0]));
 		speeds[0] = (speeds[2] * moveMentLeft);
 		
-		rpms[1] = rpms[0] + 200;
+		rpms[1] = rpms[0] + 200; //Orig = 200
 		speeds[3] = ((rpms[1] - currentRPM[1]));
 		speeds[1] = (speeds[3] * moveMentRight);
 		

@@ -5,9 +5,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwitchCase {
-	//private static double[] encodersDistance = {0};
+	private static double[] encodersDistance = {0, 0};
 	//private double[] encodersRPM = {0};
-	//private static double driveForwardDistance = driveForwardDistance = driveBase.wheelDiameter * Math.PI * 10;//10 is distance in inches - must change;
+	private static double wheelCircum = driveBase.wheelDiameter * Math.PI;//10 is distance in inches - must change;
+	private static double driveForwardDistance = 0;
 	private static Vision cameraVision = new Vision();
 	
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
@@ -30,21 +31,23 @@ public class SwitchCase {
 	 * @param state
 	 * @return state
 	 */
-	public static int driveForward(int state){
+	public static int driveForward(int state, int distance){
 		switch(state){
 			default:
 				break;
 			case 0:
 				break;
 			case 1:
-				Robot.drivebase.drive(1.0, 1.0);
+				driveForwardDistance = wheelCircum * distance;
+				Robot.drivebase.drive(.75, .75);
 				state = 2;
 				break;
 			case 2:
-				//encodersDistance = Robot.drivebase.getEncDistance();
-				/*if(encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance){
+				encodersDistance = Robot.drivebase.getEncDistance();
+				if(encodersDistance[0] > driveForwardDistance || encodersDistance[1] > driveForwardDistance){
 					Robot.drivebase.drive(0.0, 0.0);
-				}*/
+					state = 3;
+				}
 				break;
 			case 3:
 				state = 0;
@@ -60,7 +63,7 @@ public class SwitchCase {
 	 * @return state
 	 */
 	public static int autoAim(int state){
-		Robot.table.putBoolean("AUTO", state>0);
+		SmarterDashboard.putBoolean("AUTO", state>0);
 		switch(state){
 			default:
 				break;
@@ -73,6 +76,8 @@ public class SwitchCase {
 				if(Vision.manVals[0] == 0 && Vision.manVals[1] == 0){
 					autoAimRemoteState = 1;
 					state = 4;
+					//shoot(1, 0.9);
+					//return 1;
 				}
 				else
 					state = 2;
@@ -88,17 +93,19 @@ public class SwitchCase {
 				if(Vision.manVals[0] == 0) {
 					state = 4;//Change when you want f/backward
 					autoAimRemoteState = 1;
+					//shoot(1, 0.9);
+					//return 2;
 				}
 				else if(Vision.manVals[0] == 1){
-					Robot.drivebase.drive(-0.5,  0.5);
+					Robot.drivebase.drive(-0.55,  0.55);
 					state = 2;
 				}
 				else if(Vision.manVals[0] == 2){
-					Robot.drivebase.drive(0.5,  -0.5);
+					Robot.drivebase.drive(0.55,  -0.55);
 					state = 2;
 				}
 				else if(Vision.manVals[0] == 5 || Vision.manVals[1] == 5){
-					SmartDashboard.putString("ERROR", "Vision failed");
+					SmarterDashboard.putString("ERROR", "Vision failed");
 					Robot.drivebase.drive(0, 0);
 					return state; //Why go any further
 				}
@@ -114,14 +121,15 @@ public class SwitchCase {
 						state = 4;
 						autoAimRemoteState = 1;
 						SmartDashboard.putNumber("remoteBugIn", autoAimRemoteState);
+						shoot(1, 0.5);
 					}
 				}
 				else if(Vision.manVals[1] == 1){
-					Robot.drivebase.drive(-0.6, -0.6);
+					Robot.drivebase.drive(-0.55, -0.55);
 					state = 3;
 				}
 				else if(Vision.manVals[1] == 2){
-					Robot.drivebase.drive(.6, .6);
+					Robot.drivebase.drive(.55, .55);
 					state = 3;
 				}
 				else
@@ -129,7 +137,7 @@ public class SwitchCase {
 				break;
 			case 4:
 				SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
-				autoAimRemoteState = shoot(autoAimRemoteState, 0.5);//Remember to remove .8 with Vision.getSpeed() once camera is installed
+				autoAimRemoteState = shoot(autoAimRemoteState, .8);
 				if(autoAimRemoteState == 4)
 					state = 0;
 			case abortAutoAim:
@@ -143,17 +151,16 @@ public class SwitchCase {
 	}
 	
 	public static int shoot(int state, double shootSpeed){//shootSpeed is temp since there is no camera at the time of coding
-		double toSetSpeed = shootSpeed+Robot.table.getNumber("OVERDRIVE", 0.0);
+		double toSetSpeed = shootSpeed+SmarterDashboard.getNumber("OVERDRIVE", 0.0);
 		cameraVision.Update();
 		SmartDashboard.putNumber("SysTime", System.currentTimeMillis());
-		double subtractRate = 0;
 		switch(state){
 		default:
 				break;
 			case 0:
 				break;
 			case 1:
-				Robot.table.putBoolean("AUTO", true);
+				SmarterDashboard.putBoolean("AUTO", true);
 				double[] speeds = {toSetSpeed, toSetSpeed};
 				Robot.flywheels.setFlywheelSpeed(speeds);
 				autoAimTimer = System.currentTimeMillis() + 2500;
@@ -166,20 +173,24 @@ public class SwitchCase {
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
 				SmartDashboard.putString("LEFTRIGHT", String.valueOf(speedsTwo[2]) + ":" + String.valueOf(speedsTwo[3]));
 				SmartDashboard.putString("NEEDEDLEFTRIGHT", String.valueOf(speedsTwo[4]) + ":" + String.valueOf(speedsTwo[5]));
-				double leftPower = Robot.flywheels.getLeftPower();
-				double rightPower = Robot.flywheels.getRightPower();
-				double newPower[] = {leftPower + (speedsTwo[0] /2), rightPower + (speedsTwo[1] /2)};
+				double leftPower = Robot.flywheels.getLeftPower(); //SmarterDashboard.getNumber("OVERDRIVE", 0.0);;
+				double rightPower = Robot.flywheels.getRightPower(); //+ SmarterDashboard.getNumber("OVERDRIVE", 0.0);;
+				double newPower[] = {leftPower + (speedsTwo[0] / 2.6), rightPower + (speedsTwo[1] / 2.6)};
 				Robot.flywheels.setFlywheelSpeed(newPower);
-				if(cameraVision.withIn(speedsTwo[2], -200, 200) && cameraVision.withIn(speedsTwo[3], -200, 200)) {
+				if(cameraVision.withIn(speedsTwo[2], -350, 350) && cameraVision.withIn(speedsTwo[3], -350, 350)) {
 					
 					/*if(passedTimes < 4) {
 						Timer.delay(0.1);
 						passedTimes += 1;
 					} else {*/
-				//if(System.currentTimeMillis() >= autoAimTimer){
+				//if(System.currentTimeMillis() >= autoAimTimer){]
+						final double newSpeed[] = {newPower[0] + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10), 
+								newPower[1] + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10)};
+						Robot.flywheels.setFlywheelSpeed(newSpeed);
+						Timer.delay(0.2);
 						SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 						Robot.flywheels.setIntakeSpeed(1);
-						autoAimIntakeTimer = System.currentTimeMillis() + 750;
+						autoAimIntakeTimer = System.currentTimeMillis() + 1750;
 						SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
 						state = 3;
 					//}
@@ -189,7 +200,7 @@ public class SwitchCase {
 				break;
 			case 3:
 				if(System.currentTimeMillis() >= autoAimIntakeTimer){
-					Robot.table.putBoolean("AUTO", false);
+					SmarterDashboard.putBoolean("AUTO", false);
 					Robot.flywheels.setIntakeSpeed(0);
 					Robot.flywheels.setFlywheelSpeed(off);
 					state = 4;

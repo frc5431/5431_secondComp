@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class declares variables/functions related specifically to the DriveBase (and only the DriveBase).
@@ -15,7 +16,7 @@ public class driveBase {
 	private static final int samplesToAverage = 7; 								//How many pulses to do before averaging them (smoothes encoder count)
 	private static final double minEncRate = 0.0; 								//Minimum Encoder Rate before hardware thinks encoders are stopped
 	private static CANTalon frontright, frontleft, rearright, rearleft;					//Declaration of CANTalons used in the drivebase
-	private static Encoder rightBaseEncoder, leftBaseEncoder;								//Declaration of encoders used in the drivebase
+	Encoder rightBaseEncoder, leftBaseEncoder;								//Declaration of encoders used in the drivebase
 	private static RobotDrive tankDriveBase;
 	/**
 	 * Constructor for driveBase. All CANTalons are set to coast. If you want
@@ -75,7 +76,7 @@ public class driveBase {
 		rightBaseEncoder.setSamplesToAverage(samplesToAverage);				//Averages encoder count rate every samplesToAverage pulses
 		leftBaseEncoder.setSamplesToAverage(samplesToAverage);
 		rightBaseEncoder.setReverseDirection(false);						//Reverses encoder direction based on position on robot
-		leftBaseEncoder.setReverseDirection(false);
+		leftBaseEncoder.setReverseDirection(true);
 		rightBaseEncoder.setMinRate(minEncRate);							//Sets minimum rate for encoder before hardware thinks it is stopped
 		leftBaseEncoder.setMinRate(minEncRate);
 	}
@@ -87,8 +88,8 @@ public class driveBase {
 	 */
 	public void drive(double left, double right){
 		tankDriveBase.tankDrive(left, right);
-		Robot.table.putNumber("LEFT-DRIVE", left);
-		Robot.table.putNumber("RIGHT-DRIVE", right);
+		SmarterDashboard.putNumber("LEFT-DRIVE", left);
+		SmarterDashboard.putNumber("RIGHT-DRIVE", right);
 	}
 	/**
 	 * Gets distance traveled by driveBase encoders since the last encoder reset.
@@ -96,8 +97,10 @@ public class driveBase {
 	 */
 	public double[] getEncDistance(){
 		final double returnVals[] = {0,0};
-		returnVals[0] = leftBaseEncoder.getDistance();
+		returnVals[0] = -leftBaseEncoder.getDistance();//For some dumb reason, the left never inverses.
 		returnVals[1] = rightBaseEncoder.getDistance();
+		SmartDashboard.putNumber("LEFTENCODING", returnVals[0]);
+		SmartDashboard.putNumber("RIGHTENCODING", returnVals[1]);
 		return returnVals;
 	}
 	
