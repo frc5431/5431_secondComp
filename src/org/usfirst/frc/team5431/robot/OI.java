@@ -14,7 +14,8 @@ public class OI {
 	public double 
 			xboxRightJoystickVal = 0,
 			xboxLeftJoystickVal = 0,
-			joystickPotentiometerVal = 0.0;
+			joystickPotentiometerVal = 0.0,
+			joystickYVal = 0.0;
 	
 	public boolean
 			//Xbox joystick
@@ -62,6 +63,7 @@ public class OI {
 		xboxBVal = xbox.getRawButton(xboxButtonB);
 		xboxXVal = xbox.getRawButton(xboxButtonX);
 		xboxYVal = xbox.getRawButton(xboxButtonY);
+		joystickYVal = joystick.getRawAxis(1);
 		
 		//Shooting joystick
 		joystickTriggerVal = joystick.getRawButton(joystickTrigger);

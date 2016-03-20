@@ -69,6 +69,11 @@ public class Robot extends IterativeRobot {
     	SmarterDashboard.putBoolean("ENABLED", false);
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.periodic();
+    	drivebase.resetDrive();
+    	//SwitchCase.moveAmount = 0.468;
+    	Autonomous.autoAIMState = false;
+    	Autonomous.currAIM = 0;
+    	Autonomous.driveForwardState = 0;
     	Timer.delay(1); //Sleep a little for little overhead time
     }
 
@@ -88,6 +93,11 @@ public class Robot extends IterativeRobot {
      * Calls the update functions for the OI and the Teleop classes.
      */
     public void teleopPeriodic() {
+    	/*if(!runOnce) {
+    		SwitchCase.moveAmount = 0.468;
+    		runOnce = true;
+    	}*/
+    	//SwitchCase.moveAmount = 0.468;
         oiInput.updateVals();
         teleop.Update(oiInput);
         

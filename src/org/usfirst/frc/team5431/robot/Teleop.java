@@ -13,12 +13,13 @@ public class Teleop {
 	private static int prevIntakeIn = 0;
 	private static int prevIntakeOut = 0;
 	private static int prevIntakeShoot = 0;
-	private static int currentShootState = 0;
+	public static int currentShootState = 0;
 	private static int currentAutoAimState = 0;
 	private static int currentClimbState = 0;
 	private static int currentShootManualState = 0;
 	private static final double[] offState = {0.0, 0.0};
 	private static boolean ballIn = false;
+	private static boolean manualEnable = false;
 	
 	/**
 	 * Update function for the Teleop() class. Should be called in teleopPeriodic().
@@ -26,23 +27,26 @@ public class Teleop {
 	 */
 	public void Update(OI input){
 		//
-		SmarterDashboard.putNumber("OVERDRIVE", ((((-input.joystick.getZ())/2.0))*0.25)+0.875); //Even out values to become 0.875
+		//SmarterDashboard.putNumber("OVERDRIVE", ((-input.joystickYVal/2.0)*0.25)+0.875); //Even out values to become 0.875
+		SmarterDashboard.putNumber("MANUALDRIVE", ((-input.joystickYVal/2.0)*0.25)+0.875);
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
-		if(input.xboxLeftJoystickVal != 0)
-			currentAutoAimState = 0;
-		if(input.xboxRightJoystickVal != 0)
-			currentAutoAimState = 0;
+		if(input.xboxLeftJoystickVal < -0.2 || input.xboxRightJoystickVal < -0.2 
+				|| input.xboxLeftJoystickVal > 0.2 || input.xboxRightJoystickVal > 0.2) currentAutoAimState = 0;
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
-			SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
+			//SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
 			if(Robot.flywheels.getFlywheelSpeed() > 0.0) {
 				Robot.flywheels.setFlywheelSpeed(offState);
+				manualEnable = false;
 			} else {
-				double getOver = SmarterDashboard.getNumber("OVERDRIVE", 0);
+				double getOver = ((-input.joystickYVal/2.0)*0.25)+0.875;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
 				double woawvers[] = {getOver, getOver};
 				Robot.flywheels.setFlywheelSpeed(woawvers);
+				manualEnable = true;
 			}
 		}
 		prevFlywheel = (input.joystickButton2 ? 1:0);
+		
+		
 		/*
 		if(input.xboxXVal){
 			Robot.flywheels.setIntakeSpeed(-1.0);
@@ -97,16 +101,21 @@ public class Teleop {
 		prevIntakeIn = (intakeon ? 1:0);
 		
 		//if(input.xboxYVal) Robot.flywheels.climb(); //Climb the tower
-		if(input.joystickTriggerVal && currentAutoAimState == 0) currentShootState = 1;
-		if(input.joystickButton4 && currentShootState == 0) currentAutoAimState = 1;
+		if(input.joystickTriggerVal) currentShootState = 1;//&& currentAutoAimState == 0) 
+		if(input.joystickButton4) currentAutoAimState = 1;
 		if(input.joystickButton5){
 			currentAutoAimState = -1;
 			currentShootState = -1;
 			currentShootManualState = -1;
+			manualEnable = false;
+			double off[] = {0, 0};
+			Robot.flywheels.setFlywheelSpeed(off);
 		}
 		
-		if(input.joystickButton3 && !Robot.flywheels.intakeLimit.get()){
-			currentShootManualState = 1;
+		if(manualEnable) {
+			double getOver = ((-input.joystickYVal/2.0)*0.25)+0.875;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
+			double woawvers[] = {getOver, getOver};
+			Robot.flywheels.setFlywheelSpeed(woawvers);
 		}
 		
 		if(input.joystickButton6 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
@@ -123,7 +132,12 @@ public class Teleop {
 		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);
 		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
 		//currentShootState = SwitchCase.shoot(currentShootState, 0.0);
-		currentShootManualState = SwitchCase.shootManual(currentShootManualState);
+		//currentShootManualState = SwitchCase.shootManual(currentShootManualState);
 		currentClimbState = SwitchCase.climb(currentClimbState);
+		
+		if(input.joystickButton3) {// && !Robot.flywheels.intakeLimit.get()){
+			Robot.flywheels.setIntakeSpeed(1);
+		}
+		
 	}
 }

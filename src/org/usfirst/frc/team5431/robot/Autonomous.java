@@ -2,6 +2,7 @@ package org.usfirst.frc.team5431.robot;
 import org.usfirst.frc.team5431.robot.Robot.AutoTask;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class for Autonomous commands. Uses switch-cases in order to acheive multi-threading without
@@ -11,23 +12,24 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Autonomous {
 	
-	private int driveForwardState = 0;
+	public static int driveForwardState = 0;
 	private int touchForwardState = 0;
 	private int moatForwardState = 0;
-	private int autoAIMState = 0;
+	public static boolean autoAIMState = false;
+	public static int currAIM = 1;
 	private long crossMoatTimer = 0;
 	private double[] 
 			driveDistance = { 0, 0 };
 	
 	private final double[]
-			speedToOuterWork = { 0.5, 0.5 },
+			speedToOuterWork = { 0.65, 0.65 },
 			speedToCross = { 0.6, 0.6 },
 			speedToCrossMoat = { 1, 1 };
 	
 	private static final double 
 				distanceToOuterWork = 48,
-				distanceToCrossWork = 270,
-				curveAmount = 0.09;
+				distanceToCrossWork = 140,
+				curveAmount = 0.3;
 	
 	
 	/**
@@ -39,17 +41,17 @@ public class Autonomous {
 	
 	private void curveFix(double speeds[]) {
 		final double toDrive[] = { 0, 0 };
-		
-		/*if(driveDistance[0] < driveDistance[1]) {
-			toDrive[0] = speeds[0] + curveAmount;
-			toDrive[1] = speeds[1] - curveAmount;
-		} else if(driveDistance[0] > driveDistance[1]) {
+		driveDistance = Robot.drivebase.getEncDistance();
+		if(driveDistance[0] < driveDistance[1]) {
 			toDrive[0] = speeds[0] - curveAmount;
 			toDrive[1] = speeds[1] + curveAmount;
-		} else {*/
+		} else if(driveDistance[0] > driveDistance[1]) {
+			toDrive[0] = speeds[0] + curveAmount;
+			toDrive[1] = speeds[1] - curveAmount;
+		} else {
 			toDrive[0] = speeds[0];
 			toDrive[1] = speeds[1];
-		//}
+		}
 		Robot.drivebase.drive(-toDrive[0], -toDrive[1]);
 	}
 	
@@ -64,6 +66,35 @@ public class Autonomous {
 		}
 		
 		//touchForwardState = SwitchCase.driveForward(touchForwardState, 72);
+	}
+	
+	private void LowbarShoot() {
+		if((driveDistance[0] < distanceToCrossWork && driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
+			//curveFix(speedToOuterWork);
+			Robot.drivebase.drive(-0.70, -0.70);
+		} else if(!autoAIMState) {
+			driveForwardState = 1;
+    		for(int time = 0; time < 35; time++) {
+    			Robot.drivebase.drive(0.8, -0.8);
+    			Timer.delay(0.005); 
+    		}
+    		for(int time2 = 0; time2 < 15; time2++) {
+    			Robot.drivebase.drive(-0.6, -0.6);
+    			Timer.delay(0.005); 
+    		}
+	    	autoAIMState = true;
+	    	Timer.delay(0.75);
+	    	SwitchCase.moveAmount = 0.43;
+	    	SwitchCase.checkAmount = 1;
+	    	SwitchCase.shotTheBall = false;
+	    	currAIM = SwitchCase.autoAim(currAIM);
+		}
+		if(autoAIMState) {
+			SmartDashboard.putString("READY READY READY", "Auto aiming");
+			currAIM = SwitchCase.autoAim(currAIM);
+			if((currAIM == 0 || currAIM == -1) && !SwitchCase.shotTheBall) { currAIM = 1; }
+		}
+		
 	}
 	
 	private void crossForward(){
@@ -143,7 +174,7 @@ public class Autonomous {
     		moatForwardState = 1;
     		break;
     	case AutoShoot:
-        //Put custom auto code here   +201
+    		LowbarShoot();
             break;
     	case StandStill:
     	default:

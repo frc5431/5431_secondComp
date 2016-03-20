@@ -12,10 +12,10 @@ public class VisionMath {
 	//Distances and resolution values
 	public static final double 
 			screenHalf = 160,
-			minDistance = 90,
-			maxDistance = 190,
-			leftTrig = 1,
-			rightTrig = 30;
+			minDistance = 135,
+			maxDistance = 175,
+			leftTrig = 32,
+			rightTrig = 35;
 	
 	private static final double
 			maxArea = 200,

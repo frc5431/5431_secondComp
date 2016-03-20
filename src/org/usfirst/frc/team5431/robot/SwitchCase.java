@@ -12,6 +12,7 @@ public class SwitchCase {
 	private static Vision cameraVision = new Vision();
 	
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
+	private static int shootStates = 0;
 	private static long autoAimTimer = 0;
 	private static long autoAimIntakeTimer = 0;
 	private static long autoAimManualTimer = 0;
@@ -19,6 +20,11 @@ public class SwitchCase {
 	private static long raiseClimberTimer = 0;
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
+	private static boolean inAuto = false;
+	public static double moveAmount = 0.455;
+	public static int checkAmount = 3;
+	private static int timesCount = 0;
+	public static boolean shotTheBall = false;
 	public SwitchCase() {
 		
 	}
@@ -64,64 +70,81 @@ public class SwitchCase {
 	 */
 	public static int autoAim(int state){
 		SmarterDashboard.putBoolean("AUTO", state>0);
+		
 		switch(state){
 			default:
 				break;
 			case 0:
 				cameraVision.Update();
+				inAuto = false;
+				timesCount = 0;
 				break;
 			case 1:
-				//David's autoAim checking happens here
-				cameraVision.Update();
-				if(Vision.manVals[0] == 0 && Vision.manVals[1] == 0){
-					autoAimRemoteState = 1;
-					state = 4;
-					//shoot(1, 0.9);
-					//return 1;
-				}
-				else
-					state = 2;
-				break;
-			case 2:
+				SmartDashboard.putNumber("STATE STATE STATE", state);
 				//If David's autoAim code says to shoot
 				cameraVision.Update();
-				//WE ARE IGNORING CASE 3 DUE TO BUGTESTING.
-				//REPEAT: WE ARE IGNORING CASE 3 DUE TO BUGTESTING. FIX.
-				//FIX.
-				//FIX.
-				//You get it now, right?
-				if(Vision.manVals[0] == 0) {
-					state = 4;//Change when you want f/backward
-					autoAimRemoteState = 1;
-					//shoot(1, 0.9);
-					//return 2;
+				boolean pass = false;
+				
+				if(Vision.manVals[1] == 0) {
+					pass = true;
+				} 
+				else if(Vision.manVals[1] == 1){
+					Robot.drivebase.drive(0.55, 0.55);
+					state = 1;
+					pass = false;
 				}
-				else if(Vision.manVals[0] == 1){
-					Robot.drivebase.drive(-0.55,  0.55);
-					state = 2;
-				}
-				else if(Vision.manVals[0] == 2){
-					Robot.drivebase.drive(0.55,  -0.55);
-					state = 2;
-				}
-				else if(Vision.manVals[0] == 5 || Vision.manVals[1] == 5){
-					SmarterDashboard.putString("ERROR", "Vision failed");
+				else if(Vision.manVals[1] == 2){
+					Robot.drivebase.drive(-0.55, -0.55);
+					state = 1;
+					pass = false;
+				} else if(Vision.manVals[0] == 5) {// || Vision.manVals[1] == 5){
+					SmarterDashboard.putString("ERROR", "It's too close and too far");
 					Robot.drivebase.drive(0, 0);
-					return state; //Why go any further
+					state = abortAutoAim;
+					
 				}
-				else
-					state = abortAutoAim; //manVals[0] should only be 0-2. Nothing else. Somethign is wrong.
+				
+				//You get it now, right?
+				if(pass) {
+					if(Vision.manVals[0] == 0) {
+						if(timesCount > checkAmount) {
+							state = 4;//Change when you want f/backward		
+						} else {
+							state = 1;
+							timesCount += 1;
+							Timer.delay(0.1);
+						}
+					}
+					else if(Vision.manVals[0] == 1){
+						Robot.drivebase.drive(-moveAmount,  moveAmount);
+						state = 1;
+					}
+					else if(Vision.manVals[0] == 2){
+						Robot.drivebase.drive(moveAmount,  -moveAmount);
+						state = 1;
+					}
+					else if(Vision.manVals[0] == 5) {// || Vision.manVals[1] == 5){
+						SmarterDashboard.putString("ERROR", "It's too close and too far");
+						Robot.drivebase.drive(0, 0);
+						state = abortAutoAim;
+						
+					}
+					else {
+						state = abortAutoAim; //manVals[0] should only be 0-2. Nothing else. Somethign is wrong.
+					}
+				}
 				break;
+			/*
 			case 3:
 				cameraVision.Update();
+				SmartDashboard.putNumber("STATE STATE STATE", state);
 				if(Vision.manVals[1] == 0){
 					if(Vision.manVals[0] != 0)//Make sure turn left + right is alright
 						state = 2;
 					else{
 						state = 4;
-						autoAimRemoteState = 1;
+						//autoAimRemoteState = 1;
 						SmartDashboard.putNumber("remoteBugIn", autoAimRemoteState);
-						shoot(1, 0.5);
 					}
 				}
 				else if(Vision.manVals[1] == 1){
@@ -134,18 +157,32 @@ public class SwitchCase {
 				}
 				else
 					state = abortAutoAim;
-				break;
+				break;*/
 			case 4:
-				SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
-				autoAimRemoteState = shoot(autoAimRemoteState, .8);
-				if(autoAimRemoteState == 4)
-					state = 0;
+				SmartDashboard.putNumber("STATE STATE STATE", state);
+				//SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
+				//autoAimRemoteState = 
+				//if(autoAimRemoteState == 4)
+					//state = 0;
+				shootStates = 1;
+				inAuto = true;
+				state = 5;
+				break;
+			case 5:	
+				state = 5;
+				shootStates = shoot(shootStates, 0.8);
+				if(shootStates == 0) {state = -1;}
+				break;
 			case abortAutoAim:
 				SmartDashboard.putString("Bug", "Failed to AutoAim");
+				state = -1;
+				break;
 			case -1:
+				SmartDashboard.putNumber("STATE STATE STATE", -1);
 				Robot.flywheels.setFlywheelSpeed(off);
 				Robot.flywheels.setIntakeSpeed(0);
 				state = 0;
+				break;
 			}
 		return state;
 	}
@@ -190,6 +227,14 @@ public class SwitchCase {
 						Timer.delay(0.2);
 						SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 						Robot.flywheels.setIntakeSpeed(1);
+						if(inAuto) {
+							for(int a = 0;a < 200; a++) {
+								Robot.flywheels.setIntakeSpeed(1);
+								Timer.delay(0.005);
+							}
+							shotTheBall = true;
+							Robot.flywheels.setFlywheelSpeed(off);
+						}
 						autoAimIntakeTimer = System.currentTimeMillis() + 1750;
 						SmartDashboard.putNumber("autoAimIntakeBug2", autoAimIntakeTimer);
 						state = 3;
