@@ -122,6 +122,7 @@ public class Teleop {
 			Robot.flywheels.setFlywheelSpeed(woawvers);
 		}
 		/*
+		SmarterDashboard.putNumber("PRESSURE",
 		
 		if(input.joystickButton6 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
 			currentClimbState = 1;
@@ -132,8 +133,10 @@ public class Teleop {
 		
 		if(input.joystickButton10){
 			Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kReverse);
+			SmarterDashboard.putBoolean("CHOPPERS",false);
 		}
 		else if(input.joystickButton11){
+					SmarterDashboard.putBoolean("CHOPPERS",true);
 			//Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kForward);
 		}*/
 		SmartDashboard.putBoolean("intakeon", intakeon);
