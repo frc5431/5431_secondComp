@@ -16,12 +16,12 @@ public class RobotMap {
 		leftFlyWheel = 8,
 		intake = 5,
 		winch = 9,
-		climberExtend1 = 1,
-		climberExtend2 = 2,
-		climberRaise1 = 3,
-		climberRaise2 = 4,
-		choppers1=5,
-		choppers2 = 6,
+		climberExtend1 = 0,
+		climberExtend2 = 7,
+		climberRaise1 = 1,
+		climberRaise2 = 6,
+		choppers1=2,
+		choppers2 = 5,
 		
 		rightBaseEnc1 = 0,	//Mapping for encoders' DIO ports
 		rightBaseEnc2 = 1,
@@ -31,5 +31,7 @@ public class RobotMap {
 		rightFWEnc2 = 15,
 		leftFWEnc1 = 16,
 		leftFWEnc2 = 17,
-		intakeLim = 8;
+		intakeLim = 8,
+	
+		pcm = 0;//PCM NEEDS TO BE 0. NOT ANYTHING ELSE.
 }

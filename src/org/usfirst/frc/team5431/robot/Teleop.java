@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -59,7 +60,7 @@ public class Teleop {
 		final boolean intakeon = (input.xbox.getRawAxis(3)) > 0.3; // if passed 1/3 move on
 		final boolean intakereverse = (input.xbox.getRawAxis(2)) > 0.3;
 		
-		if((intakereverse ? 1:0) > prevIntakeOut){
+		if((intakereverse ? 1:0) > prevIntakeOut && currentShootState == 0 && currentAutoAimState == 0){
 			if(Robot.flywheels.getIntakeSpeed() < 0.0)
 				Robot.flywheels.setIntakeSpeed(0);
 			else
@@ -89,7 +90,7 @@ public class Teleop {
 		}
 		*/
 		SmartDashboard.putNumber("Bug", 1.280000000006);
-		if((intakeon ? 1:0) > prevIntakeIn){
+		if((intakeon ? 1:0) > prevIntakeIn  && currentShootState == 0 && currentAutoAimState == 0){
 			SmartDashboard.putNumber("Bug", 3.14);
 			SmartDashboard.putNumber("Intake speed", Robot.flywheels.getIntakeSpeed());
 			if(Robot.flywheels.getIntakeSpeed() != 0.0)
@@ -101,8 +102,8 @@ public class Teleop {
 		prevIntakeIn = (intakeon ? 1:0);
 		
 		//if(input.xboxYVal) Robot.flywheels.climb(); //Climb the tower
-		if(input.joystickTriggerVal) currentShootState = 1;//&& currentAutoAimState == 0) 
-		if(input.joystickButton4) currentAutoAimState = 1;
+		if(input.joystickTriggerVal && currentAutoAimState == 0) currentShootState = 1;//&& currentAutoAimState == 0) 
+		if(input.joystickButton4 && currentShootState == 0) currentAutoAimState = 1;
 		if(input.joystickButton5){
 			currentAutoAimState = -1;
 			currentShootState = -1;
@@ -117,23 +118,32 @@ public class Teleop {
 			double woawvers[] = {getOver, getOver};
 			Robot.flywheels.setFlywheelSpeed(woawvers);
 		}
+		/*
 		
 		if(input.joystickButton6 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
 			currentClimbState = 1;
 		}
-		else if(input.joystickButton7 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState > 0 && currentClimbState < 8){
+		else if(input.joystickButton7 && currentAutoAimState == 0 && currentShootState == 0 && currentShootManualState == 0 && currentClimbState < 8){
 			currentClimbState = 8;
 		}
+		
+		if(input.joystickButton10){
+			Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kReverse);
+		}
+		else if(input.joystickButton11){
+			//Robot.pneumatics.choppers.set(DoubleSolenoid.Value.kForward);
+		}*/
 		SmartDashboard.putBoolean("intakeon", intakeon);
 		SmartDashboard.putBoolean("intakeReverse", intakereverse);
 		SmartDashboard.putNumber("currentShootState", currentShootState);
 		SmartDashboard.putNumber("currentAutoAimState", currentAutoAimState);
+		//SmartDashboard.putNumber("currentClimbState", currentClimbState);
 		
 		currentAutoAimState = SwitchCase.autoAim(currentAutoAimState);
 		currentShootState = SwitchCase.shoot(currentShootState, (input.joystickPotentiometerVal + 1.0)/2.0);
 		//currentShootState = SwitchCase.shoot(currentShootState, 0.0);
 		//currentShootManualState = SwitchCase.shootManual(currentShootManualState);
-		currentClimbState = SwitchCase.climb(currentClimbState);
+		//currentClimbState = SwitchCase.climb(currentClimbState);
 		
 		if(input.joystickButton3) {// && !Robot.flywheels.intakeLimit.get()){
 			Robot.flywheels.setIntakeSpeed(1);

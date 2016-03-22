@@ -28,7 +28,7 @@ public class Autonomous {
 	
 	private static final double 
 				distanceToOuterWork = 48,
-				distanceToCrossWork = 140,
+				distanceToCrossWork = 128,
 				curveAmount = 0.3;
 	
 	
@@ -71,14 +71,14 @@ public class Autonomous {
 	private void LowbarShoot() {
 		if((driveDistance[0] < distanceToCrossWork && driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
 			//curveFix(speedToOuterWork);
-			Robot.drivebase.drive(-0.70, -0.70);
+			Robot.drivebase.drive(-0.70, -0.73);
 		} else if(!autoAIMState) {
 			driveForwardState = 1;
     		for(int time = 0; time < 35; time++) {
     			Robot.drivebase.drive(0.8, -0.8);
     			Timer.delay(0.005); 
     		}
-    		for(int time2 = 0; time2 < 15; time2++) {
+    		for(int time2 = 0; time2 < 35; time2++) {
     			Robot.drivebase.drive(-0.6, -0.6);
     			Timer.delay(0.005); 
     		}
