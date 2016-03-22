@@ -21,7 +21,7 @@ public class SwitchCase {
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
 	private static boolean inAuto = false;
-	public static double moveAmount = 0.5;
+	public static double moveAmount = 0.455;
 	public static int checkAmount = 3;
 	private static int timesCount = 0;
 	public static boolean shotTheBall = false;

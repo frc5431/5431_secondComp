@@ -28,7 +28,7 @@ public class Autonomous {
 	
 	private static final double 
 				distanceToOuterWork = 48,
-				distanceToCrossWork = 128,
+				distanceToCrossWork = 150, //128
 				curveAmount = 0.3;
 	
 	
