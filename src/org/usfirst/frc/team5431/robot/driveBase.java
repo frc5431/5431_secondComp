@@ -108,5 +108,16 @@ public class driveBase {
 		leftBaseEncoder.reset();
 		rightBaseEncoder.reset();
 	}
-	
+	public void enableBrakeMode(){
+		frontright.enableBrakeMode(true);
+		rearright.enableBrakeMode(true);
+		frontleft.enableBrakeMode(true);
+		rearleft.enableBrakeMode(true);
+	}
+	public void disableBrakeMode(){
+		frontright.enableBrakeMode(false);
+		rearright.enableBrakeMode(false);
+		frontleft.enableBrakeMode(false);
+		rearleft.enableBrakeMode(false);
+	}
 }

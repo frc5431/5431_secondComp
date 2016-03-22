@@ -10,7 +10,7 @@ public class SwitchCase {
 	private static double wheelCircum = driveBase.wheelDiameter * Math.PI;//10 is distance in inches - must change;
 	private static double driveForwardDistance = 0;
 	private static Vision cameraVision = new Vision();
-	
+	private static boolean pass = false;
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
 	private static int shootStates = 0;
 	private static long autoAimTimer = 0;
@@ -21,7 +21,7 @@ public class SwitchCase {
 	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
 	private static boolean inAuto = false;
-	public static double moveAmount = 0.455;
+	public static double moveAmount = 0.5;
 	public static int checkAmount = 3;
 	private static int timesCount = 0;
 	public static boolean shotTheBall = false;
@@ -83,7 +83,6 @@ public class SwitchCase {
 				SmartDashboard.putNumber("STATE STATE STATE", state);
 				//If David's autoAim code says to shoot
 				cameraVision.Update();
-				boolean pass = false;
 				
 				if(Vision.manVals[1] == 0) {
 					pass = true;
@@ -106,6 +105,7 @@ public class SwitchCase {
 				
 				//You get it now, right?
 				if(pass) {
+					Robot.drivebase.enableBrakeMode();
 					if(Vision.manVals[0] == 0) {
 						if(timesCount > checkAmount) {
 							state = 4;//Change when you want f/backward		
@@ -159,6 +159,7 @@ public class SwitchCase {
 					state = abortAutoAim;
 				break;*/
 			case 4:
+				Robot.drivebase.disableBrakeMode();
 				SmartDashboard.putNumber("STATE STATE STATE", state);
 				//SmartDashboard.putNumber("remoteBug", autoAimRemoteState);
 				//autoAimRemoteState = 
@@ -175,9 +176,10 @@ public class SwitchCase {
 				break;
 			case abortAutoAim:
 				SmartDashboard.putString("Bug", "Failed to AutoAim");
-				state = -1;
+				state = 1;
 				break;
 			case -1:
+				Robot.drivebase.disableBrakeMode();
 				SmartDashboard.putNumber("STATE STATE STATE", -1);
 				Robot.flywheels.setFlywheelSpeed(off);
 				Robot.flywheels.setIntakeSpeed(0);
