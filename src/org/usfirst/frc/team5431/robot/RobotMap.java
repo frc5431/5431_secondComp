@@ -31,7 +31,7 @@ public class RobotMap {
 		rightFWEnc2 = 15,
 		leftFWEnc1 = 16,
 		leftFWEnc2 = 17,
-		intakeLim = 8,
+		intakeLim = 4,
 	
 		pcm = 0;//PCM NEEDS TO BE 0. NOT ANYTHING ELSE.
 }

@@ -24,7 +24,8 @@ public class Autonomous {
 	private final double[]
 			speedToOuterWork = { 0.65, 0.65 },
 			speedToCross = { 0.6, 0.6 },
-			speedToCrossMoat = { 1, 1 };
+			speedToCrossMoat = { 1, 1 },
+			speedToCrossRock = { 1, 1 };
 	
 	private static final double 
 				distanceToOuterWork = 48,
@@ -106,6 +107,15 @@ public class Autonomous {
 		}
 	}
 	
+	private void crossRockWall(){
+		if((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
+			curveFix(speedToCrossRock);
+		} else {
+			Robot.drivebase.resetDrive();
+			driveForwardState = 1;
+		}
+	}
+	
 	private int moatForward(int state){
 		switch(state){
 		case 0:
@@ -172,6 +182,9 @@ public class Autonomous {
     	case Moat:
     		//moatForward();
     		moatForwardState = 1;
+    		break;
+    	case RockWall:
+    		crossRockWall();
     		break;
     	case AutoShoot:
     		LowbarShoot();

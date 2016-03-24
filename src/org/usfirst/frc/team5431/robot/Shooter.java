@@ -35,6 +35,8 @@ public class Shooter {
 		
 		rightFW.setInverted(true);
 		leftFW.setInverted(false);
+		leftFW.enableBrakeMode(false);
+		rightFW.enableBrakeMode(false);
 		rightFW.setFeedbackDevice(FeedbackDevice.EncRising);
 		leftFW.setFeedbackDevice(FeedbackDevice.EncRising);
 		leftFW.configEncoderCodesPerRev(1024);
