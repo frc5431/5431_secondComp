@@ -211,16 +211,13 @@ public class SwitchCase {
 				double[] speeds = {toSetSpeed, toSetSpeed};
 				Robot.flywheels.setFlywheelSpeed(speeds);
 				autoAimTimer = System.currentTimeMillis() + 2500;
-				Robot.flywheels.leftFW.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-				Robot.flywheels.rightFW.setFeedbackDevice(FeedbackDevice.QuadEncoder);
-				
+	    		Robot.flywheels.leftFW.setVoltageRampRate(1);
+	    		Robot.flywheels.rightFW.setVoltageRampRate(1);
 				
 				state = 2;
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
 				SmartDashboard.putNumber("shootBug2", autoAimTimer);
-	    		Robot.flywheels.leftFW.setVoltageRampRate(1);
-	    		Robot.flywheels.rightFW.setVoltageRampRate(1);
 				
 				double[] curRPM = Robot.flywheels.getRPM();
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
@@ -264,6 +261,8 @@ public class SwitchCase {
 					SmarterDashboard.putBoolean("AUTO", false);
 					Robot.flywheels.setIntakeSpeed(0);
 					Robot.flywheels.setFlywheelSpeed(off);
+		    		Robot.flywheels.leftFW.setVoltageRampRate(10);
+		    		Robot.flywheels.rightFW.setVoltageRampRate(10);
 					state = 4;
 				}
 				else
@@ -275,6 +274,8 @@ public class SwitchCase {
 			case -1://You are aborting
 				Robot.flywheels.setIntakeSpeed(0);
 				Robot.flywheels.setFlywheelSpeed(off);
+	    		Robot.flywheels.leftFW.setVoltageRampRate(10);
+	    		Robot.flywheels.rightFW.setVoltageRampRate(10);
 				state = 0;
 		}
 		return state;

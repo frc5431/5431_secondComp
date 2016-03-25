@@ -24,9 +24,7 @@ public class Robot extends IterativeRobot {
 	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter, Spybox, RockwallShoot};
 	static AutoTask currentAuto;
 	
-	public static final boolean brakeMode = false;
-	private static boolean runOnce = false;
-    
+	public static final boolean brakeMode = false;    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -89,11 +87,6 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	if(!runOnce) {
-    		flywheels.leftFW.setVoltageRampRate(1);
-    		flywheels.rightFW.setVoltageRampRate(1);
-    		runOnce = true;
-    	}
     	auton.updateStates(currentAuto);
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.putBoolean("AUTO", true);
@@ -106,10 +99,6 @@ public class Robot extends IterativeRobot {
      * Calls the update functions for the OI and the Teleop classes.
      */
     public void teleopPeriodic() {
-    	/*if(!runOnce) {
-    		SwitchCase.moveAmount = 0.468;
-    		runOnce = true;
-    	}*/
     	//SwitchCase.moveAmount = 0.468;
         oiInput.updateVals();
         teleop.Update(oiInput);
