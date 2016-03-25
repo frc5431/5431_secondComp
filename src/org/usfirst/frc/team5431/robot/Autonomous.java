@@ -113,6 +113,19 @@ public class Autonomous {
 		} else {
 			Robot.drivebase.resetDrive();
 			driveForwardState = 1;
+			if(!autoAIMState) {
+		    	autoAIMState = true;
+		    	Timer.delay(0.75);
+		    	SwitchCase.moveAmount = 0.43;
+		    	SwitchCase.checkAmount = 1;
+		    	SwitchCase.shotTheBall = false;
+		    	currAIM = SwitchCase.autoAim(currAIM);
+			}
+			if(autoAIMState) {
+				SmartDashboard.putString("READY READY READY", "Auto aiming");
+				currAIM = SwitchCase.autoAim(currAIM);
+				if((currAIM == 0 || currAIM == -1) && !SwitchCase.shotTheBall) { currAIM = 1; }
+			}
 		}
 	}
 	
@@ -157,6 +170,33 @@ public class Autonomous {
 		*/
 		return state;
 	}
+	/**
+	 * Shoots from the spybox position.
+	 */
+	private void spyboxShoot(){
+		for(int time = 0; time < 35; time++) {
+			Robot.drivebase.drive(0.8, -0.8);
+			Timer.delay(0.005); 
+		}
+		for(int time2 = 0; time2 < 35; time2++) {
+			Robot.drivebase.drive(-0.6, -0.6);
+			Timer.delay(0.005); 
+		}
+		if(!autoAIMState) {
+			driveForwardState = 1;
+	    	autoAIMState = true;
+	    	Timer.delay(0.75);
+	    	SwitchCase.moveAmount = 0.43;
+	    	SwitchCase.checkAmount = 1;
+	    	SwitchCase.shotTheBall = false;
+	    	currAIM = SwitchCase.autoAim(currAIM);
+		}
+		if(autoAIMState) {
+			SmartDashboard.putString("READY READY READY", "Auto aiming");
+			currAIM = SwitchCase.autoAim(currAIM);
+			if((currAIM == 0 || currAIM == -1) && !SwitchCase.shotTheBall) { currAIM = 1; }
+		}
+	}
 	
 	private void encoderUpdate() {
 		driveDistance = Robot.drivebase.getEncDistance();
@@ -189,6 +229,9 @@ public class Autonomous {
     	case AutoShoot:
     		LowbarShoot();
             break;
+    	case Spybox:
+    		spyboxShoot();
+    		break;
     	case StandStill:
     	default:
     		Timer.delay(0.1);
