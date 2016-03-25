@@ -113,6 +113,15 @@ public class Autonomous {
 		} else {
 			Robot.drivebase.resetDrive();
 			driveForwardState = 1;
+		}
+	}
+	
+	private void shootRockWall(){
+		if((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
+			curveFix(speedToCrossRock);
+		} else {
+			Robot.drivebase.resetDrive();
+			driveForwardState = 1;
 			if(!autoAIMState) {
 		    	autoAIMState = true;
 		    	Timer.delay(0.75);
@@ -127,6 +136,7 @@ public class Autonomous {
 				if((currAIM == 0 || currAIM == -1) && !SwitchCase.shotTheBall) { currAIM = 1; }
 			}
 		}
+		
 	}
 	
 	private int moatForward(int state){
@@ -231,6 +241,9 @@ public class Autonomous {
             break;
     	case Spybox:
     		spyboxShoot();
+    		break;
+    	case RockwallShoot:
+    		shootRockWall();
     		break;
     	case StandStill:
     	default:
