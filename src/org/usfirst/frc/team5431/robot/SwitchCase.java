@@ -221,20 +221,20 @@ public class SwitchCase {
 				SmartDashboard.putString("NEEDEDLEFTRIGHT", String.valueOf(speedsTwo[4]) + ":" + String.valueOf(speedsTwo[5]));
 				double leftPower = Robot.flywheels.getLeftPower(); //SmarterDashboard.getNumber("OVERDRIVE", 0.0);;
 				double rightPower = Robot.flywheels.getRightPower(); //+ SmarterDashboard.getNumber("OVERDRIVE", 0.0);;
-				double newPower[] = {leftPower + (speedsTwo[0] / 2.6), rightPower + (speedsTwo[1] / 2.6)};
+				double newPower[] = {leftPower +(speedsTwo[0] / 3.5), rightPower + (speedsTwo[1] /3.5)};
 				Robot.flywheels.setFlywheelSpeed(newPower);
-				if(cameraVision.withIn(speedsTwo[2], -350, 350) && cameraVision.withIn(speedsTwo[3], -350, 350)) {
+				if(cameraVision.withIn(speedsTwo[2], -400, 400) && cameraVision.withIn(speedsTwo[3], -400, 400)) {
 					
 					/*if(passedTimes < 4) {
 						Timer.delay(0.1);
 						passedTimes += 1;
 					} else {*/
 				//if(System.currentTimeMillis() >= autoAimTimer){]
-						final double newSpeed[] = {newPower[0] + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10), 
-								newPower[1] + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10)};
+						final double newSpeed[] = {newPower[0] - 0.1, // + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10), 
+								newPower[1] - 0.1};// + 0.009 + (SmarterDashboard.getNumber("OVERDRIVE", 0.0) /10)};
 						Robot.flywheels.setFlywheelSpeed(newSpeed);
-						Timer.delay(0.2);
-						SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
+						//Timer.delay(0.2);
+						//SmartDashboard.putNumber("autoAimIntakebug", System.currentTimeMillis());
 						Robot.flywheels.setIntakeSpeed(1);
 						if(inAuto) {
 							for(int a = 0;a < 200; a++) {

@@ -12,10 +12,10 @@ public class VisionMath {
 	//Distances and resolution values
 	public static final double 
 			screenHalf = 160,
-			minDistance = 135,
-			maxDistance = 175,
-			leftTrig = 32,
-			rightTrig = 35;
+			minDistance = 80,
+			maxDistance = 140,
+			leftTrig = 15,
+			rightTrig = 18;
 	
 	private static final double
 			maxArea = 200,
@@ -52,15 +52,16 @@ public class VisionMath {
 	public double[] RPMCalc(double distanceCalc, double[] currentRPM, double currentPWR) {
 		double[] rpms = { 0, 0 }; //Future RPM needed 
 		double[] speeds = { 0, 0, 0, 0, 0, 0 }; //Future speed to adjust
-		double moveMentLeft = 0.0001738; //Amount of difference per RPM
-		double moveMentRight = 0.0001727; //Amount of difference per RPM
+		double moveMentLeft = 0.00021481432536; //Amount of difference per RPM
+		double moveMentRight = 0.000211551567469; //Amount of difference per RPM
 		
-		//LEFT-SIDE //
-		rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY (DISTANCE-RPM (NEEDED))
+		//LEFT-SIDE // Code (9579.2 * .99048 ^x)
+		//rpms[0] = 6099.2873 - (19.4674 * distanceCalc); //6099.2873 - 19.4674x - LEFT FLY (DISTANCE-RPM (NEEDED))
+		rpms[0] = 9579.2 * Math.pow(0.99048, distanceCalc) - 500;
 		speeds[2] = ((rpms[0] - currentRPM[0]));
 		speeds[0] = (speeds[2] * moveMentLeft);
 		
-		rpms[1] = rpms[0] + 200; //Orig = 200
+		rpms[1] = rpms[0] + 30; //Orig = 200
 		speeds[3] = ((rpms[1] - currentRPM[1]));
 		speeds[1] = (speeds[3] * moveMentRight);
 		

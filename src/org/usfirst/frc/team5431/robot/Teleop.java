@@ -29,7 +29,7 @@ public class Teleop {
 	public void Update(OI input){
 		//
 		//SmarterDashboard.putNumber("OVERDRIVE", ((-input.joystickYVal/2.0)*0.25)+0.875); //Even out values to become 0.875
-		SmarterDashboard.putNumber("MANUALDRIVE", ((-input.joystickYVal/2.0)*0.25)+0.875);
+		SmarterDashboard.putNumber("MANUALDRIVE", ((-input.joystickYVal/2.0)*0.5)+0.75);
 		
 		Robot.drivebase.drive(input.xboxLeftJoystickVal, input.xboxRightJoystickVal);
 		/*
@@ -42,7 +42,7 @@ public class Teleop {
 				Robot.flywheels.setFlywheelSpeed(offState);
 				manualEnable = false;
 			} else {
-				double getOver = ((-input.joystickYVal/2.0)*0.25)+0.875;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
+				double getOver = ((-input.joystickYVal/2.0)*0.5)+0.75;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
 				double woawvers[] = {getOver, getOver};
 				Robot.flywheels.setFlywheelSpeed(woawvers);
 				manualEnable = true;
@@ -71,15 +71,14 @@ public class Teleop {
 			//Intake in
 		}
 		prevIntakeOut = (intakereverse ? 1:0);
+		ballIn = !(Robot.flywheels.intakeLimit.get());
 		if(Robot.flywheels.getIntakeSpeed() > 0.0){
 			SmartDashboard.putNumber("Bug", -1.54);
-			if(!Robot.flywheels.intakeLimit.get() && currentShootState == 0){
+			if(ballIn && currentShootState == 0){
 				SmartDashboard.putNumber("Bug", 1.345);
 				Robot.flywheels.setIntakeSpeed(0);
-				ballIn = true;
 			} else{
 				SmartDashboard.putNumber("Bug", 5.431);
-				ballIn = false;
 			}
 		}
 		SmarterDashboard.putBoolean("boulder", ballIn);
@@ -117,7 +116,7 @@ public class Teleop {
 		}
 		
 		if(manualEnable) {
-			double getOver = ((-input.joystickYVal/2.0)*0.25)+0.875;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
+			double getOver = ((-input.joystickYVal/2.0)*0.5)+0.75;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
 			double woawvers[] = {getOver, getOver};
 			Robot.flywheels.setFlywheelSpeed(woawvers);
 		}
