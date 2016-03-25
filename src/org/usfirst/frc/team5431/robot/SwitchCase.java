@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -210,6 +211,10 @@ public class SwitchCase {
 				double[] speeds = {toSetSpeed, toSetSpeed};
 				Robot.flywheels.setFlywheelSpeed(speeds);
 				autoAimTimer = System.currentTimeMillis() + 2500;
+				Robot.flywheels.leftFW.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+				Robot.flywheels.rightFW.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+				
+				
 				state = 2;
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
