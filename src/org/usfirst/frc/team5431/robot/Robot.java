@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
     static OI oiInput;
     static SendableChooser auton_select;
     
-	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter};
+	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter, Spybox};
 	static AutoTask currentAuto;
 	
 	public static final boolean brakeMode = false;
@@ -41,6 +41,7 @@ public class Robot extends IterativeRobot {
         auton_select.addObject("Cross Outer", AutoTask.CrossOuter);
         auton_select.addObject("Moat Over", AutoTask.Moat);
         auton_select.addObject("Rockwall Over", AutoTask.RockWall);
+        auton_select.addObject("Spybox", AutoTask.Spybox);
         SmartDashboard.putData("Auto choices", auton_select);
         
         drivebase = new driveBase(brakeMode);
