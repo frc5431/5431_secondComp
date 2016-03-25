@@ -25,6 +25,7 @@ public class Robot extends IterativeRobot {
 	static AutoTask currentAuto;
 	
 	public static final boolean brakeMode = false;
+	private static boolean runOnce = false;
     
     /**
      * This function is run when the robot is first started up and should be
@@ -86,6 +87,11 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	if(!runOnce) {
+    		flywheels.leftFW.setVoltageRampRate(1);
+    		flywheels.rightFW.setVoltageRampRate(1);
+    		runOnce = true;
+    	}
     	auton.updateStates(currentAuto);
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.putBoolean("AUTO", true);

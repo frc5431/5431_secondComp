@@ -13,9 +13,9 @@ public class VisionMath {
 	public static final double 
 			screenHalf = 160,
 			minDistance = 80,
-			maxDistance = 140,
-			leftTrig = 15,
-			rightTrig = 18;
+			maxDistance = 89,
+			leftTrig = 30,
+			rightTrig = 36;
 	
 	private static final double
 			maxArea = 200,
@@ -67,6 +67,8 @@ public class VisionMath {
 		
 		speeds[4] = rpms[0];
 		speeds[5] = rpms[1];
+		
+		SmarterDashboard.putNumber("AUTO-AIM-SPEED", rpms[0]);
 		
 		return speeds;
 	}

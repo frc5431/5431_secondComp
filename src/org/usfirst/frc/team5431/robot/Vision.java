@@ -94,8 +94,6 @@ public class Vision {
 																	// turn the
 																	// turrent
 
-			SmarterDashboard.putNumber("AUTO-AIM-SPEED", getSpeed());
-
 			if ((manVals[1] == 0) && (manVals[0] == 0)) {
 				SmarterDashboard.putString("FIRE", "F");
 				SmarterDashboard.putString("PULL", "F");

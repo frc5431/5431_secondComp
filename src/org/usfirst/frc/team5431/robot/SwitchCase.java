@@ -18,7 +18,7 @@ public class SwitchCase {
 	private static long autoAimManualTimer = 0;
 	private static long extendClimberTimer = 0;
 	private static long raiseClimberTimer = 0;
-	private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
+	//private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
 	private static boolean inAuto = false;
 	public static double moveAmount = 0.455;
@@ -88,12 +88,12 @@ public class SwitchCase {
 					pass = true;
 				} 
 				else if(Vision.manVals[1] == 1){
-					Robot.drivebase.drive(0.55, 0.55);
+					Robot.drivebase.drive(0.52, 0.52);
 					state = 1;
 					pass = false;
 				}
 				else if(Vision.manVals[1] == 2){
-					Robot.drivebase.drive(-0.55, -0.55);
+					Robot.drivebase.drive(-0.53, -0.53);
 					state = 1;
 					pass = false;
 				} else if(Vision.manVals[0] == 5) {// || Vision.manVals[1] == 5){
@@ -214,6 +214,8 @@ public class SwitchCase {
 			case 2:
 				SmartDashboard.putNumber("shootBug", System.currentTimeMillis());
 				SmartDashboard.putNumber("shootBug2", autoAimTimer);
+	    		Robot.flywheels.leftFW.setVoltageRampRate(1);
+	    		Robot.flywheels.rightFW.setVoltageRampRate(1);
 				
 				double[] curRPM = Robot.flywheels.getRPM();
 				double[] speedsTwo = cameraVision.getRPMS(curRPM, toSetSpeed);
