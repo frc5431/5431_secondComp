@@ -20,7 +20,7 @@ public class RobotMap {
 		climberExtend2 = 7,
 		climberRaise1 = 1,
 		climberRaise2 = 6,
-		choppers1=2,
+		choppers1=4, //Changed from 2
 		choppers2 = 5,
 		
 		rightBaseEnc1 = 0,	//Mapping for encoders' DIO ports

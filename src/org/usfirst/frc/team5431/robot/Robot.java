@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team5431.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -21,7 +22,7 @@ public class Robot extends IterativeRobot {
     static OI oiInput;
     static SendableChooser auton_select;
     
-	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter, Spybox, RockwallShoot};
+	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter, Spybox, RockwallShoot, RoughTerrain};
 	static AutoTask currentAuto;
 	
 	public static final boolean brakeMode = false;    
@@ -41,6 +42,7 @@ public class Robot extends IterativeRobot {
         auton_select.addObject("Rockwall Over", AutoTask.RockWall);
         auton_select.addObject("Spybox", AutoTask.Spybox);
         auton_select.addObject("Rockwall + Shoot", AutoTask.RockwallShoot);
+        auton_select.addObject("Rough Terrain", AutoTask.RoughTerrain);
         SmartDashboard.putData("Auto choices", auton_select);
         
         drivebase = new driveBase(brakeMode);
@@ -64,9 +66,11 @@ public class Robot extends IterativeRobot {
 	 * If using the SendableChooser make sure to add them to the chooser code above as well.
 	 */
     public void autonomousInit() {
+    	drivebase.enableBrakeMode();
     	SmarterDashboard.putBoolean("AUTO", true);
     	currentAuto = (AutoTask) auton_select.getSelected();
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
+ 		ClimbChop.choppers.set(DoubleSolenoid.Value.kReverse);
  		drivebase.resetDrive();
     }
     
@@ -93,7 +97,9 @@ public class Robot extends IterativeRobot {
     	Timer.delay(0.005); // Wait 50 Hz
     	SmarterDashboard.periodic();
     }
-
+    public void teleopInit(){
+    	drivebase.disableBrakeMode();
+    }
     /**
      * This function is called periodically during operator control.
      * Calls the update functions for the OI and the Teleop classes.

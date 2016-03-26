@@ -10,7 +10,7 @@ public class SwitchCase {
 	//private double[] encodersRPM = {0};
 	private static double wheelCircum = driveBase.wheelDiameter * Math.PI;//10 is distance in inches - must change;
 	private static double driveForwardDistance = 0;
-	private static Vision cameraVision = new Vision();
+	static Vision cameraVision = new Vision();
 	private static boolean pass = false;
 	public final static int abortAutoAim = -42;		//Get the joke, anyone?
 	private static int shootStates = 0;
@@ -22,7 +22,7 @@ public class SwitchCase {
 	//private static int autoAimRemoteState = 0;	//Used for the shoot() function within autoAim()
 	private static double[] off = {0, 0};
 	private static boolean inAuto = false;
-	public static double moveAmount = 0.455;
+	public static double moveAmount = 0.47;
 	public static int checkAmount = 3;
 	private static int timesCount = 0;
 	public static boolean shotTheBall = false;
@@ -89,12 +89,12 @@ public class SwitchCase {
 					pass = true;
 				} 
 				else if(Vision.manVals[1] == 1){
-					Robot.drivebase.drive(0.52, 0.52);
+					Robot.drivebase.drive(0.46, 0.46);
 					state = 1;
 					pass = false;
 				}
 				else if(Vision.manVals[1] == 2){
-					Robot.drivebase.drive(-0.53, -0.53);
+					Robot.drivebase.drive(-0.46, -0.46);
 					state = 1;
 					pass = false;
 				} else if(Vision.manVals[0] == 5) {// || Vision.manVals[1] == 5){
@@ -172,8 +172,19 @@ public class SwitchCase {
 				break;
 			case 5:	
 				state = 5;
-				shootStates = shoot(shootStates, 0.8);
-				if(shootStates == 0) {state = -1;}
+				//shootStates = shoot(shootStates, 0.8);
+				//if(shootStates == 0) {state = -1;}
+				double speeds3[] = {1, 1}; 
+				for(int a = 0; a < 1000; a++) {
+					Robot.flywheels.setFlywheelSpeed(speeds3);
+					Timer.delay(0.005);
+					if(a > 600) {
+						Robot.flywheels.setIntakeSpeed(1);
+					}
+				}
+				shotTheBall = true;
+				Robot.flywheels.setFlywheelSpeed(off);
+				state = 1;
 				break;
 			case abortAutoAim:
 				SmartDashboard.putString("Bug", "Failed to AutoAim");

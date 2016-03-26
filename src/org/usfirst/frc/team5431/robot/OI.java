@@ -23,6 +23,8 @@ public class OI {
 			xboxBVal = false,
 			xboxXVal = false,
 			xboxYVal = false,
+			xboxBLeft = false,
+			xboxBRight = false,
 			//Gun joystick
 			joystickTriggerVal = false,
 			joystickButton2 = false,
@@ -31,6 +33,7 @@ public class OI {
 			joystickButton5 = false,
 			joystickButton6 = false,
 			joystickButton7 = false,
+			joystickButton8 = false,
 			joystickButton10 = false,
 			joystickButton11 = false;
 	private static int 
@@ -40,6 +43,8 @@ public class OI {
 			xboxButtonB = 2,
 			xboxButtonX = 3,
 			xboxButtonY = 4,
+			xboxBumperLeft = 5,
+			xboxBumperRight = 6,
 			//Gun joystick
 			joystickPotentiometer = 2,
 			joystickTrigger = 1,
@@ -49,6 +54,7 @@ public class OI {
 			joystickButtonLabeled5 = 5,
 			joystickButtonLabeled6 = 6,
 			joystickButtonLabeled7 = 7,
+			joystickButtonLabeled8 = 8,
 			joystickButtonLabeled10 = 10,
 			joystickButtonLabeled11 = 11;
 	
@@ -65,7 +71,9 @@ public class OI {
 		xboxAVal = xbox.getRawButton(xboxButtonA);
 		xboxBVal = xbox.getRawButton(xboxButtonB);
 		xboxXVal = xbox.getRawButton(xboxButtonX);
-		xboxYVal = xbox.getRawButton(xboxButtonY);
+		//xboxYVal = xbox.getRawButton(xboxButtonY);
+		xboxBLeft = xbox.getRawButton(xboxBumperLeft);
+		xboxBRight = xbox.getRawButton(xboxBumperRight);
 		joystickYVal = joystick.getRawAxis(1);
 		
 		//Shooting joystick
@@ -76,6 +84,7 @@ public class OI {
 		joystickButton5 = joystick.getRawButton(joystickButtonLabeled5);
 		joystickButton6 = joystick.getRawButton(joystickButtonLabeled6);
 		joystickButton7 = joystick.getRawButton(joystickButtonLabeled7);
+		joystickButton8 = joystick.getRawButton(joystickButtonLabeled8);
 		joystickButton10 = joystick.getRawButton(joystickButtonLabeled10);
 		joystickButton11 = joystick.getRawButton(joystickButtonLabeled11);
 		//Add joystick stuff if we ever need a joystick

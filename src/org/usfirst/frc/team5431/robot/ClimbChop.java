@@ -11,7 +11,7 @@ public class ClimbChop {
 	static CANTalon winch;
 	
 	public ClimbChop(){
-		/*
+		
 		pcm = new Compressor(RobotMap.pcm);
 		pcm.setClosedLoopControl(false);
 		pcm.start();
@@ -30,6 +30,6 @@ public class ClimbChop {
 		extendClimber.set(DoubleSolenoid.Value.kReverse);
 		raiseClimber.set(DoubleSolenoid.Value.kReverse);
 		choppers.set(DoubleSolenoid.Value.kForward);
-		winch = new CANTalon(RobotMap.winch);*/
+		winch = new CANTalon(RobotMap.winch);
 	}
 }

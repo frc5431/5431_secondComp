@@ -30,6 +30,7 @@ public class Autonomous {
 	private static final double 
 				distanceToOuterWork = 48,
 				distanceToCrossWork = 150, //128
+				distanceToCrossRough = 130,
 				curveAmount = 0.3;
 	
 	
@@ -41,6 +42,7 @@ public class Autonomous {
 	}
 	
 	private void curveFix(double speeds[]) {
+		/*
 		final double toDrive[] = { 0, 0 };
 		driveDistance = Robot.drivebase.getEncDistance();
 		if(driveDistance[0] < driveDistance[1]) {
@@ -53,7 +55,8 @@ public class Autonomous {
 			toDrive[0] = speeds[0];
 			toDrive[1] = speeds[1];
 		}
-		Robot.drivebase.drive(-toDrive[0], -toDrive[1]);
+		Robot.drivebase.drive(-toDrive[0], -toDrive[1]);*/
+		Robot.drivebase.drive(-speeds[0], -speeds[1]);
 	}
 	
 	
@@ -99,28 +102,47 @@ public class Autonomous {
 	}
 	
 	private void crossForward(){
+		driveDistance = Robot.drivebase.getEncDistance();
 		if((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
-			curveFix(speedToCross);
+			Robot.drivebase.drive(-0.70, -0.73);
 		} else {
+			Robot.drivebase.drive(0, 0);
 			Robot.drivebase.resetDrive();
 			driveForwardState = 1;
 		}
 	}
 	
 	private void crossRockWall(){
+		driveDistance = Robot.drivebase.getEncDistance();
 		if((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
-			curveFix(speedToCrossRock);
+			Robot.drivebase.drive(-1, -1);
 		} else {
+			Robot.drivebase.drive(0, 0);
+			Robot.drivebase.resetDrive();
+			driveForwardState = 1;
+		}
+	}
+	
+	private void crossRoughTerrain(){
+		driveDistance = Robot.drivebase.getEncDistance();
+		if((driveDistance[0] < distanceToCrossRough || driveDistance[1] < distanceToCrossRough) && driveForwardState == 0) {
+			Robot.drivebase.drive(-1, -1);
+		} else {
+			Robot.drivebase.drive(0, 0);
 			Robot.drivebase.resetDrive();
 			driveForwardState = 1;
 		}
 	}
 	
 	private void shootRockWall(){
-		if((driveDistance[0] < distanceToCrossWork || driveDistance[1] < distanceToCrossWork) && driveForwardState == 0) {
-			curveFix(speedToCrossRock);
+		driveDistance = Robot.drivebase.getEncDistance();
+		if((driveDistance[0] < (distanceToCrossWork/2) || driveDistance[1] < (distanceToCrossWork/2)) && driveForwardState == 0) {
+			Robot.drivebase.drive(-1, -1);
 		} else {
+			Robot.drivebase.drive(0, 0);
 			Robot.drivebase.resetDrive();
+			Timer.delay(0.5);
+			Robot.drivebase.drive(0, 0);
 			driveForwardState = 1;
 			if(!autoAIMState) {
 		    	autoAIMState = true;
