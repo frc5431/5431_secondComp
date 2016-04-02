@@ -20,6 +20,7 @@ public class Teleop {
 	private static int currentShootManualState = 0;
 	private static final double[] offState = {0.0, 0.0};
 	private static boolean ballIn = false;
+	private static int flywheelspeed=0;
 	private static boolean manualEnable = false;
 	
 	/**
@@ -39,13 +40,12 @@ public class Teleop {
 		*/
 		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			//SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
-			if(Robot.flywheels.getFlywheelSpeed() > 0.0) {
-				Robot.flywheels.setFlywheelSpeed(offState);
+			if(flywheelspeed>0) {
+				flywheelspeed=0;
 				manualEnable = false;
 			} else {
 				double getOver = ((-input.joystickYVal/2.0)*0.5)+0.75;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
-				double woawvers[] = {getOver, getOver};
-				Robot.flywheels.setFlywheelSpeed(woawvers);
+				flywheelspeed=(int)getOver;
 				manualEnable = true;
 			}
 		}
@@ -122,8 +122,8 @@ public class Teleop {
 		SwitchCase.cameraVision.getRPMS(curRPM, getOver);
 		
 		if(manualEnable) {
-			double woawvers[] = {getOver, getOver};
-			Robot.flywheels.setFlywheelSpeed(woawvers);
+			int woawvers[] = {(int)(getOver*4500.0), (int)(getOver*4500.0)};
+			Robot.flywheels.setPIDSpeed(woawvers);
 		}
 		//SmarterDashboard.putNumber("PRESSURE", R
 		/*

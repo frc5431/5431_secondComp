@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
  * Class to control the flywheels and intake of the robot. Also does climber.
@@ -33,10 +34,14 @@ public class Shooter {
 		winchMotor.setInverted(false);
 		intakeMotor.setInverted(false);
 		
-		rightFW.setInverted(true);
-		leftFW.setInverted(false);
+//		rightFW.setInverted(true);
+//		leftFW.setInverted(false);
 		leftFW.enableBrakeMode(false);
 		rightFW.enableBrakeMode(false);
+		leftFW.changeControlMode(TalonControlMode.Speed);
+		rightFW.changeControlMode(TalonControlMode.Speed);
+		leftFW.setPID(0.3, 0.001, 0.2, 0.01, 0, 12, 0);
+		rightFW.setPID(0.3, 0.001, 0.2, 0.01, 0, 12, 0);
 		rightFW.setFeedbackDevice(FeedbackDevice.EncRising);
 		leftFW.setFeedbackDevice(FeedbackDevice.EncRising);
 		leftFW.configEncoderCodesPerRev(1024);
@@ -85,6 +90,11 @@ public class Shooter {
 	}
 	public double getIntakeSpeed(){
 		return intakeMotor.get();
+	}
+	
+	public void setPIDSpeed(int[] speeds){
+		leftFW.set(speeds[0]);
+		rightFW.set(speeds[1]);
 	}
 	
 }
