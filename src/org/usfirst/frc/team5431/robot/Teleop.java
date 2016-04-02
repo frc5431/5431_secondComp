@@ -111,12 +111,14 @@ public class Teleop {
 			currentAutoAimState = -1;
 			currentShootState = -1;
 			currentShootManualState = -1;
+			currentClimbState=-1;
 			manualEnable = false;
 			double off[] = {0, 0};
 			Robot.flywheels.setFlywheelSpeed(off);
 		}
 		
-		double getOver = ((-input.joystickYVal/2.0)*0.5)+0.75;//SmarterDashboard.getNumber("MANUALDRIVE", 0);
+		double getOver = ((-input.joystickYVal/2.0)*0.5)+0.75;
+		//double getOver = SmarterDashboard.getNumber("MANUAL-SPEED", 0.0);
 		SmarterDashboard.putNumber("POWER", getOver);
 		double[] curRPM = Robot.flywheels.getRPM();
 		SwitchCase.cameraVision.getRPMS(curRPM, getOver);

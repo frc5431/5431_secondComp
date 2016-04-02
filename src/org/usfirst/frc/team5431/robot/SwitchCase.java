@@ -315,6 +315,7 @@ public class SwitchCase {
 			break;
 		case -1:
 			Robot.flywheels.setIntakeSpeed(0);
+			Robot.flywheels.setFlywheelSpeed(off);
 			state = 0;
 			break;
 		}
