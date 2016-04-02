@@ -19,9 +19,7 @@ public class Robot extends IterativeRobot {
     static ClimbChop pneumatics;
     static Teleop teleop;
     static Autonomous auton;
-    static OI oiInput;
-    static SendableChooser auton_select;
-    
+    static OI oiInput;    
 	enum AutoTask{ RockWall, Moat, TouchOuterWork, Lowbar, AutoShoot, StandStill, CrossOuter, Spybox, RockwallShoot, RoughTerrain};
 	static AutoTask currentAuto;
 	
@@ -31,19 +29,6 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		
-		//Autonomous selection
-        auton_select = new SendableChooser();
-        auton_select.addDefault("AutoShoot Lowbar", AutoTask.AutoShoot);
-        auton_select.addObject("StandStill", AutoTask.StandStill);
-        auton_select.addObject("Touch Outer", AutoTask.TouchOuterWork);
-        auton_select.addObject("Cross Outer", AutoTask.CrossOuter);
-        auton_select.addObject("Moat Over", AutoTask.Moat);
-        auton_select.addObject("Rockwall Over", AutoTask.RockWall);
-        auton_select.addObject("Spybox", AutoTask.Spybox);
-        auton_select.addObject("Rockwall + Shoot", AutoTask.RockwallShoot);
-        auton_select.addObject("Rough Terrain", AutoTask.RoughTerrain);
-        SmartDashboard.putData("Auto choices", auton_select);
         
         drivebase = new driveBase(brakeMode);
         flywheels = new Shooter();
@@ -68,7 +53,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
     	drivebase.enableBrakeMode();
     	SmarterDashboard.putBoolean("AUTO", true);
-    	currentAuto = (AutoTask) auton_select.getSelected();
+    	currentAuto = AutoTask.valueOf(SmarterDashboard.getString("AUTO-SELECTED", "AutoShoot"));
  		SmartDashboard.putString("Auto Selected: ", currentAuto.toString());
  		ClimbChop.choppers.set(DoubleSolenoid.Value.kReverse);
  		drivebase.resetDrive();
@@ -95,7 +80,8 @@ public class Robot extends IterativeRobot {
     	SmarterDashboard.putBoolean("connection", true);
     	SmarterDashboard.putBoolean("AUTO", true);
     	Timer.delay(0.005); // Wait 50 Hz
-    	SmarterDashboard.periodic();
+    	//SmarterDashboard.periodic();
+    	
     }
     public void teleopInit(){
     	drivebase.disableBrakeMode();

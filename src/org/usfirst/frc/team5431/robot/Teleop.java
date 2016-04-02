@@ -36,7 +36,8 @@ public class Teleop {
 		if(input.xboxLeftJoystickVal < -0.2 || input.xboxRightJoystickVal < -0.2 
 				|| input.xboxLeftJoystickVal > 0.2 || input.xboxRightJoystickVal > 0.2) currentAutoAimState = 0;
 		
-		*/if((input.joystickButton2 ? 1:0) > prevFlywheel){
+		*/
+		if((input.joystickButton2 ? 1:0) > prevFlywheel){
 			//SmartDashboard.putNumber("Flywheel speed", Robot.flywheels.getFlywheelSpeed());
 			if(Robot.flywheels.getFlywheelSpeed() > 0.0) {
 				Robot.flywheels.setFlywheelSpeed(offState);
